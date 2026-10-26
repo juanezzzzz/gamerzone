@@ -1,0 +1,65 @@
+/* Sistema de diseño. Cualquier color, tamaño o espacio del sitio sale de aquí. */
+:root {
+  /* Color: 70 % superficies, 20 % foto, 10 % acento. Acento RGB: cian eléctrico + magenta */
+  --noche: #05060d;
+  --superficie: #0b0d18;
+  --superficie-2: #111426;
+  --superficie-3: #191d36;
+  --acento: #2fe0ff;
+  --acento-2: #ff2fa6;
+  --acento-claro: #5ccfea;
+  --texto: #eef6ff;
+  --texto-secundario: #8e96b5;
+  --linea: #1e2340;
+  --vip: #e8c27e;
+  --vip-2: #ffe3a8;
+  --vip-noche: #0d0906;
+  /* Los acentos activos cambian a dorado solo mientras se está en la sala VIP */
+  --acento-activo: var(--acento);
+  --acento-2-activo: var(--acento-2);
+  --fondo-activo: var(--noche);
+  --rgb: linear-gradient(100deg, var(--acento-activo), var(--acento-2-activo));
+  /* Luz: glows para acentos y halos de ambiente */
+  --glow: 0 0 24px -4px var(--acento-activo), 0 0 48px -12px var(--acento-2-activo);
+  --halo-cian: rgb(47 224 255 / 0.14);
+  --halo-magenta: rgb(255 47 166 / 0.12);
+
+  /* Tipografía */
+  --f-display: 'Anybody', 'Arial Narrow', sans-serif;
+  --f-body: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+
+  --t-xs: 0.75rem;
+  --t-s: 0.875rem;
+  --t-m: 1rem;
+  --t-l: 1.125rem;
+  --t-xl: 1.3125rem;
+  --t-2xl: 1.5rem;
+  --t-3xl: 2.25rem;
+  --t-4xl: 3rem;
+  --t-5xl: clamp(3rem, 6vw, 4.5rem);
+  --t-display: clamp(2.75rem, 7vw, 7rem);
+  --t-mega: clamp(4.5rem, 17vw, 17rem);
+
+  --stretch-condensado: 50%;
+  --stretch-medio: 72%;
+
+  /* Espacio */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-5: 3rem;
+  --s-6: 4.5rem;
+  --s-seccion: clamp(6rem, 12vw, 11rem);
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+  --nav-h: 4rem;
+
+  /* Forma y movimiento */
+  --radio-media: 4px;
+  --radio-boton: 999px;
+  --ease-ui: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 250ms;
+
+  color-scheme: dark;
+}

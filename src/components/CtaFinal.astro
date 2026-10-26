@@ -1,0 +1,37 @@
+---
+import { NEGOCIO, waLink } from '../data/local'
+import { url } from '../lib/url'
+---
+
+<section class="cta" id="reserva" data-cta>
+  <video src={url('/media/piso1-sala.mp4')} poster={url('/media/piso1-sala-poster.webp')} muted loop playsinline preload="none"></video>
+  <div class="sombra"></div>
+  <div class="contenido">
+    <h2 class="pregunta" data-cta-titulo>¿Jugamos?</h2>
+    <p class="lead cierre">Aparta tu sesión por WhatsApp y llega directo a jugar.</p>
+    <div class="acciones">
+      <a class="btn" href={waLink()} target="_blank" rel="noopener">Reservar sesión</a>
+      <p class="numero">
+        <span class="label">O escribe al</span>
+        <span class:list={{ pendiente: NEGOCIO.whatsapp.pendiente }}>{NEGOCIO.whatsapp.visible}</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; }
+  video, .sombra { position: absolute; inset: 0; width: 100%; height: 100%; }
+  video { object-fit: cover; }
+  .sombra { background: linear-gradient(to top, var(--noche) 5%, rgb(5 7 10 / 0.4)); }
+  .contenido { position: relative; display: grid; gap: var(--s-5); padding: 0 var(--gutter) var(--s-6); }
+  .pregunta {
+    font: 900 clamp(5rem, 21vw, 22rem) / 0.8 var(--f-display);
+    font-stretch: 50%;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .cierre { color: var(--texto); }
+  .acciones { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; }
+  .numero { display: grid; gap: 0.2rem; font-size: var(--t-xl); }
+</style>

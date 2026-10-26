@@ -1,0 +1,31 @@
+---
+import { NEGOCIO, SEDES } from '../data/local'
+import { url } from '../lib/url'
+---
+
+<!-- Apertura: una pantalla. El logo 3D se arma solo (autoplay) y los subtítulos dicen qué es el lugar -->
+<section class="apertura" id="inicio" aria-label={`${NEGOCIO.nombre} ${NEGOCIO.lema}`} data-apertura>
+  <gamerzone-logo autoplay src={url('/logo/gamerzone-logo.glb')} poster={url('/logo/gamerzone-poster.webp')}>
+    <p data-from="0" data-to="0.34" data-kicker={`${NEGOCIO.nombre} · ${NEGOCIO.lema}`}>Sala de videojuegos</p>
+    <p data-from="0.38" data-to="0.7" data-kicker="PCs gamer · Xbox · Sala VIP">Juega en grande</p>
+    <p data-from="0.74" data-to="1.01" data-kicker={`${SEDES.length} sedes · ${NEGOCIO.ciudad.texto}`}>Bienvenido a {NEGOCIO.nombre}</p>
+  </gamerzone-logo>
+</section>
+
+<script>
+  import '../scripts/gz-logo.js'
+</script>
+
+<style>
+  /* El alto se reserva aquí y no en el componente: así la página no salta cuando el
+     custom element se registra, y los ScrollTrigger miden bien desde el principio.
+     Una sola pantalla: el armado corre con el tiempo, no con el scroll. */
+  gamerzone-logo {
+    --gz-scroll: 100svh;
+    display: block;
+    height: 100svh;
+  }
+  /* Los subtítulos son datos para el componente; no se muestran antes de que cargue */
+  gamerzone-logo > p { display: none; }
+
+</style>

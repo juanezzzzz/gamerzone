@@ -1,0 +1,109 @@
+---
+import { Picture } from 'astro:assets'
+import { COMODIDADES } from '../data/local'
+import imgEscalera from '../assets/media/escalera.webp'
+// Regla del termómetro: de 31 °C (afuera) a 22 °C (adentro)
+const grados = Array.from({ length: 10 }, (_, i) => 31 - i)
+---
+
+<section class="lugar" data-lugar>
+  <div class="escena" data-lugar-escena>
+    <div class="foto" data-lugar-media>
+      <Picture src={imgEscalera} alt="Escalera iluminada" formats={['avif', 'webp']} fallbackFormat="webp" widths={[800, 1400, 2000]} sizes="100vw" />
+      <div class="sombra"></div>
+    </div>
+
+    <div class="clima">
+      <p class="label">Afuera 31 °C · Adentro</p>
+      <p class="temp"><span data-temp>31</span><span class="unidad">°C</span></p>
+      <p class="caption">Aire acondicionado en todas las salas. Juegas fresco aunque afuera esté hirviendo.</p>
+    </div>
+
+    <ol class="regla" aria-hidden="true" data-regla>
+      {grados.map((g) => <li data-grado={g}>{g}</li>)}
+    </ol>
+
+    <dl class="comodidades">
+      {
+        COMODIDADES.map((c) => (
+          <div class="item">
+            <dt class="label">{c.label}</dt>
+            <dd class:list={{ pendiente: c.pendiente }}>{c.texto}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  /* Full bleed: la escalera entra por una rendija y se abre; el termómetro baja encima */
+  .escena {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 1fr auto;
+    gap: var(--s-4) var(--gutter);
+    padding: calc(var(--nav-h) + var(--s-5)) var(--gutter) var(--s-4);
+    overflow: hidden;
+  }
+  .foto { position: absolute; inset: 0; }
+  :global(.motion) .foto { clip-path: inset(0% 46% 0% 46%); }
+  .foto :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .sombra {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgb(5 7 10 / 0.85), rgb(5 7 10 / 0.2) 60%),
+      linear-gradient(to top, rgb(5 7 10 / 0.9), transparent 40%);
+  }
+
+  .clima { position: relative; align-self: center; display: grid; gap: var(--s-3); }
+  .temp {
+    display: flex;
+    align-items: flex-start;
+    font: 900 clamp(9rem, 26vw, 26rem) / 0.78 var(--f-display);
+    font-stretch: 50%;
+    font-variant-numeric: tabular-nums;
+  }
+  .unidad { font-size: 0.28em; font-stretch: 80%; color: var(--acento-activo); margin-top: 0.12em; }
+  .caption { max-width: 28ch; font-size: var(--t-2xl); line-height: 1.3; }
+
+  /* Regla vertical: el grado actual se enciende mientras baja la temperatura */
+  .regla {
+    position: relative;
+    align-self: center;
+    display: grid;
+    gap: 0.6rem;
+    font: 500 var(--t-xs) / 1 var(--f-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--texto-secundario);
+  }
+  .regla li { display: flex; align-items: center; gap: var(--s-1); transition: color var(--dur-micro); }
+  .regla li::before { content: ''; width: 0.75rem; height: 1px; background: currentColor; transition: width var(--dur-micro) var(--ease-ui); }
+  .regla li[data-activo] { color: var(--acento-activo); }
+  .regla li[data-activo]::before { width: 1.75rem; }
+
+  .comodidades {
+    position: relative;
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid rgb(234 245 250 / 0.15);
+  }
+  .item { display: grid; gap: var(--s-1); padding: var(--s-3) var(--s-3) 0 0; }
+  dd { max-width: 26ch; color: var(--texto); }
+
+  @media (max-width: 64rem) {
+    .comodidades { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 47.99rem) {
+    .escena { grid-template-columns: minmax(0, 1fr) auto; }
+    .temp { font-size: 40vw; }
+    .caption { font-size: var(--t-l); }
+    .regla { gap: 0.35rem; }
+    .comodidades { grid-template-columns: 1fr; }
+    .item { grid-template-columns: 6rem 1fr; padding-top: var(--s-2); }
+  }
+</style>

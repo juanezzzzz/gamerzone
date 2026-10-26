@@ -1,0 +1,66 @@
+---
+import { FAQ } from '../data/local'
+---
+
+<section class="faq" aria-labelledby="faq-titulo">
+  <div class="pegado">
+    <h2 class="display titulo" id="faq-titulo">Lo que siempre nos preguntan</h2>
+  </div>
+  <div class="lista">
+    {
+      FAQ.map((f) => (
+        <details class="item">
+          <summary>
+            {f.p}
+            <span class="signo" aria-hidden="true" />
+          </summary>
+          <p class:list={{ pendiente: f.pendiente }}>{f.r}</p>
+        </details>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* Sticky + accordion */
+  .faq {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: var(--gutter);
+    padding: var(--s-seccion) var(--gutter);
+    background: var(--superficie);
+  }
+  .pegado { position: sticky; top: calc(var(--nav-h) + var(--s-5)); align-self: start; }
+  .titulo { max-width: 10ch; font-size: var(--t-display); font-stretch: 58%; }
+  .item { border-bottom: 1px solid var(--linea); }
+  .item:first-child { border-top: 1px solid var(--linea); }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-3);
+    padding-block: var(--s-3);
+    font-size: var(--t-xl);
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker { display: none; }
+  .signo { position: relative; flex: none; width: 14px; height: 14px; }
+  .signo::before, .signo::after {
+    content: '';
+    position: absolute;
+    inset: 6px 0 auto;
+    height: 2px;
+    background: var(--acento-activo);
+    transition: transform var(--dur-micro) var(--ease-ui);
+  }
+  .signo::after { transform: rotate(90deg); }
+  .item[open] .signo::after { transform: rotate(0deg); }
+  .item p { max-width: 52ch; padding-bottom: var(--s-3); color: var(--texto-secundario); }
+
+  @media (max-width: 47.99rem) {
+    .faq { grid-template-columns: 1fr; }
+    .pegado { position: static; }
+    summary { font-size: var(--t-l); }
+  }
+</style>

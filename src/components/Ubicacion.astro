@@ -1,0 +1,138 @@
+---
+import { NEGOCIO, HORARIO, SEDES, waLink } from '../data/local'
+import { formatoHora } from '../lib/horario'
+const nombres = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+---
+
+<section class="ubicacion" id="sedes" data-ubicacion data-horario={JSON.stringify(HORARIO.dias)}>
+  <!-- Columna del número: el estado de hoy en grande y el horario de la semana -->
+  <div class="numero">
+    <p class="label" data-hoy-label>Horario</p>
+    <p class:list={['hora', { pendiente: HORARIO.pendiente }]} data-hoy-hora>10:00</p>
+    <dl class:list={['semana', { pendiente: HORARIO.pendiente }]}>
+      {
+        [1, 2, 3, 4, 5, 6, 0].map((d) => {
+          const h = HORARIO.dias.find((x) => x.dia === d)
+          return (
+            <div class="dia" data-dia={d}>
+              <dt>
+                {nombres[d]}
+                {h?.transnochon && <span class="tag">Transnochón</span>}
+              </dt>
+              <dd>{h ? `${formatoHora(h.abre)} – ${formatoHora(h.cierra)}` : 'Cerrado'}</dd>
+            </div>
+          )
+        })
+      }
+    </dl>
+    <p class="label nota">Mismo horario en las dos sedes</p>
+  </div>
+
+  <!-- Columna de las sedes -->
+  <div class="datos">
+    <header class="cabeza">
+      <p class="label">Ubicación</p>
+      <h2 class="display titulo">Dos sedes. Te esperamos.</h2>
+    </header>
+    <ul class="sedes">
+      {
+        SEDES.map((s) => (
+          <li class="sede">
+            <p class="sede-nombre">{s.nombre}</p>
+            <address>
+              <span class:list={['dir', { pendiente: s.direccion.pendiente }]}>{s.direccion.texto}</span>
+              <span class:list={['label', { pendiente: s.barrio.pendiente }]}>
+                {s.barrio.texto} · {NEGOCIO.ciudad.texto}
+              </span>
+            </address>
+            <div class="acciones">
+              <a class="btn btn-ghost" href={s.mapa} target="_blank" rel="noopener">Cómo llegar</a>
+              <a class="enlace" href={waLink(`Hola, quiero reservar en GamerZone ${s.nombre}.`)} target="_blank" rel="noopener">
+                Reservar en esta sede
+              </a>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="contacto">
+      <span class="label">WhatsApp</span>
+      <span class:list={{ pendiente: NEGOCIO.whatsapp.pendiente }}>{NEGOCIO.whatsapp.visible}</span>
+      <span class="label">Instagram</span>
+      <a class:list={['enlace', { pendiente: NEGOCIO.instagram.pendiente }]} href={`https://instagram.com/${NEGOCIO.instagram.texto.replace('@', '')}`} target="_blank" rel="noopener">{NEGOCIO.instagram.texto}</a>
+    </p>
+  </div>
+</section>
+
+<script>
+  import { estadoHoy, ahoraEnColombia, type DiaHorario } from '../lib/horario'
+  // El número grande muestra el estado de hoy con la hora de Colombia.
+  const el = document.querySelector<HTMLElement>('[data-ubicacion]')
+  if (el) {
+    const dias: DiaHorario[] = JSON.parse(el.dataset.horario || '[]')
+    const estado = estadoHoy(dias)
+    el.querySelector(`[data-dia="${ahoraEnColombia().getDay()}"]`)?.classList.add('hoy')
+    const label = el.querySelector('[data-hoy-label]')
+    const hora = el.querySelector('[data-hoy-hora]')
+    if (label) label.textContent = estado.label
+    if (hora) hora.textContent = estado.hora
+  }
+</script>
+
+<style>
+  /* Editorial con número: el estado de hoy como elemento gráfico; a la derecha, las dos sedes */
+  .ubicacion {
+    display: grid;
+    grid-template-columns: 6fr 6fr;
+    gap: var(--gutter);
+    align-items: start;
+    padding: var(--s-seccion) var(--gutter);
+    border-top: 1px solid var(--linea);
+  }
+  .numero { display: grid; gap: var(--s-3); align-content: start; }
+  .hora {
+    font: 900 clamp(5rem, 15vw, 15rem) / 0.8 var(--f-display);
+    font-stretch: 50%;
+    font-variant-numeric: tabular-nums;
+    background: var(--rgb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .semana { width: 100%; max-width: 30rem; display: grid; font-size: var(--t-s); }
+  .dia { display: flex; justify-content: space-between; padding-block: 0.45rem; border-bottom: 1px solid var(--linea); color: var(--texto-secundario); }
+  .dia dt { display: flex; align-items: center; gap: var(--s-1); }
+  .dia dd { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+  .dia.hoy { color: var(--texto); }
+  .tag {
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radio-media);
+    background: var(--rgb);
+    color: var(--noche);
+    font: 600 var(--t-xs) / 1 var(--f-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .nota { color: var(--texto-secundario); }
+
+  .datos { display: grid; gap: var(--s-5); }
+  .cabeza { display: grid; gap: var(--s-2); }
+  .titulo { font-size: var(--t-display); font-stretch: 58%; }
+  .sedes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
+  .sede { display: grid; gap: var(--s-3); align-content: start; padding-top: var(--s-3); border-top: 2px solid var(--acento); }
+  .sede + .sede { border-top-color: var(--acento-2); }
+  .sede-nombre { font: 800 var(--t-3xl) / 1 var(--f-display); font-stretch: 62%; text-transform: uppercase; }
+  address { display: grid; gap: var(--s-1); font-style: normal; }
+  .dir { font-size: var(--t-xl); }
+  .acciones { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); }
+  .enlace { font-size: var(--t-s); color: var(--acento); text-underline-offset: 0.25em; }
+  .contacto { display: grid; grid-template-columns: auto 1fr; gap: var(--s-1) var(--s-3); align-items: baseline; }
+
+  @media (max-width: 64rem) {
+    .ubicacion { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 47.99rem) {
+    .hora { font-size: 34vw; }
+    .sedes { grid-template-columns: 1fr; }
+  }
+</style>

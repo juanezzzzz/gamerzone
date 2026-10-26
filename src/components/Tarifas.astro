@@ -1,0 +1,81 @@
+---
+import { TARIFAS } from '../data/local'
+---
+
+<section class="tarifas" id="tarifas">
+  <header class="cabeza">
+    <div class="pegado">
+      <h2 class="display titulo">Tarifas</h2>
+      <p class="lead">Pagas por el tiempo que jugaste. Sin membresías ni letra pequeña.</p>
+    </div>
+  </header>
+
+  <div class="carta">
+    {
+      TARIFAS.map((g) => (
+        <div class:list={['grupo', { vip: g.vip }]} data-reveal>
+          <h3 class="label grupo-nombre">{g.grupo}</h3>
+          <dl>
+            {g.filas.map((f) => (
+              <div class="fila">
+                <dt>{f.nombre}</dt>
+                <dd class:list={{ pendiente: f.pendiente }}>{f.precio}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))
+    }
+    <p class="nota label">Precios en pesos colombianos, por puesto.</p>
+  </div>
+</section>
+
+<style>
+  /* Sticky + lista: el título se queda, la carta pasa */
+  .tarifas {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: var(--gutter);
+    padding: var(--s-seccion) var(--gutter);
+    background: radial-gradient(ellipse 40% 50% at 10% 30%, var(--halo-cian), transparent 70%);
+  }
+  .pegado { position: sticky; top: calc(var(--nav-h) + var(--s-5)); display: grid; gap: var(--s-3); }
+  .titulo { font-size: var(--t-mega); font-stretch: 50%; }
+
+  .carta { display: grid; gap: var(--s-6); align-content: start; padding-top: var(--s-4); }
+  .grupo-nombre { padding-bottom: var(--s-2); border-bottom: 1px solid var(--linea); }
+  .vip .grupo-nombre { color: var(--vip); }
+  .fila {
+    display: flex;
+    align-items: baseline;
+    gap: var(--s-2);
+    padding-block: var(--s-2);
+    border-bottom: 1px solid var(--linea);
+  }
+  dt { font-size: var(--t-xl); }
+  /* Línea de puntos entre el nombre y el precio, como en una carta */
+  .fila::after { content: ''; order: 1; flex: 1; border-bottom: 1px dotted var(--linea); transform: translateY(-0.3em); }
+  dd {
+    order: 2;
+    font: 800 var(--t-4xl) / 1 var(--f-display);
+    font-stretch: 62%;
+    font-variant-numeric: tabular-nums;
+  }
+  .vip dd { color: var(--vip); }
+  .nota { color: var(--texto-secundario); }
+
+  /* Al pasar por una fila, las demás se apagan y la elegida se adelanta */
+  .fila { transition: opacity 500ms var(--ease-ui), transform 700ms var(--ease-ui); }
+  .carta:has(.fila:hover) .fila:not(:hover) { opacity: 0.3; }
+  .fila:hover { transform: translateX(var(--s-2)); }
+  .fila:hover dd { color: var(--acento); }
+  .vip .fila:hover dd { color: var(--vip-2); }
+
+  @media (max-width: 47.99rem) {
+    .tarifas { grid-template-columns: 1fr; }
+    .pegado { position: static; }
+    .titulo { font-size: 30vw; }
+    dt { font-size: var(--t-l); }
+    dd { font-size: var(--t-3xl); }
+  }
+</style>

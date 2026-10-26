@@ -1,0 +1,181 @@
+---
+import { Picture } from 'astro:assets'
+import { CONSOLAS } from '../data/local'
+
+// Eje de tiempo con distancias reales entre lanzamientos
+const desde = Number(CONSOLAS[0].anio)
+const hasta = Number(CONSOLAS[CONSOLAS.length - 1].anio)
+const pos = (anio: string) => ((Number(anio) - desde) / (hasta - desde)) * 100
+---
+
+<section class="consolas" id="consolas" data-consolas>
+  <div class="pin" data-consolas-pin>
+    <div class="pista" data-consolas-pista>
+      <header class="intro">
+        <p class="label">Consolas</p>
+        <h2 class="display titulo">Tres generaciones de Xbox</h2>
+        <p class="lead">Juega en grande. El juego se vive mejor en grupo, de los clásicos de sofá de la 360 a la Series S.</p>
+      </header>
+      {
+        CONSOLAS.map((c, i) => (
+          <article class="panel" data-panel={i} data-anio={c.anio}>
+            <p class="anio" aria-hidden="true">{c.anio}</p>
+            <div class="info">
+              <p class="label">{`Lanzamiento ${c.anio}`}</p>
+              <h3 class="display nombre">{c.nombre}</h3>
+              <p class="texto">{c.texto}</p>
+              <ul class="ficha">
+                {c.ficha.map((f) => <li class="label">{f}</li>)}
+              </ul>
+            </div>
+            <div class="foto" data-panel-foto>
+              <Picture src={c.img} alt={`Control de ${c.nombre}`} formats={['avif', 'webp']} fallbackFormat="webp" widths={[700, 1100, 1600]} sizes="(max-width: 64rem) 88vw, 55vw" />
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="eje" aria-hidden="true">
+      <div class="regla" data-eje>
+        {
+          CONSOLAS.map((c, i) => (
+            <span class="hito" data-hito={i} data-x={pos(c.anio)}>
+              <span class="label">{c.anio}</span>
+              <span class="hito-nombre">{c.nombre}</span>
+            </span>
+          ))
+        }
+        <span class="marcador" data-marcador></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .consolas { border-top: 1px solid var(--linea); }
+  .pin {
+    position: relative;
+    height: 100svh;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
+    overflow: hidden;
+  }
+  .pista { display: flex; min-height: 0; }
+
+  .intro {
+    flex: 0 0 min(34rem, 40vw);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--s-3);
+    padding: var(--nav-h) var(--gutter) 0;
+  }
+  .titulo { font-size: var(--t-display); font-stretch: 58%; }
+
+  /* Un panel por consola: año gigante detrás, ficha a la izquierda, foto a sangre a la derecha */
+  .panel {
+    position: relative;
+    /* Paneles de 62vw: la línea de tiempo se recorre en unas dos pantallas */
+    flex: 0 0 62vw;
+    min-height: 0;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 45fr 55fr;
+    padding-top: var(--nav-h);
+  }
+  .anio {
+    position: absolute;
+    left: var(--gutter);
+    bottom: -0.08em;
+    font: 900 clamp(6rem, 14vw, 14rem) / 0.8 var(--f-display);
+    font-stretch: 50%;
+    color: var(--superficie-3);
+    pointer-events: none;
+    user-select: none;
+  }
+  .info {
+    position: relative;
+    display: grid;
+    align-content: center;
+    gap: var(--s-2);
+    padding: 0 var(--gutter);
+  }
+  .nombre { font-size: var(--t-display); font-stretch: 58%; }
+  .texto { max-width: 30ch; font-size: var(--t-l); color: var(--texto-secundario); }
+  .ficha { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3); padding-top: var(--s-2); border-top: 1px solid var(--linea); }
+  .ficha li { color: var(--texto); }
+  .foto { position: relative; overflow: hidden; background: var(--superficie); }
+  .foto :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Eje 2005 → 2020: las distancias entre hitos son los años reales */
+  .eje { padding: var(--s-3) var(--gutter) var(--s-4); background: var(--fondo-activo); border-top: 1px solid var(--linea); }
+  .regla { position: relative; height: 3.25rem; margin-inline: 2.5rem; }
+  /* Una marca por año: 15 intervalos entre 2005 y 2020 */
+  .regla::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 0.5rem;
+    background: repeating-linear-gradient(to right, var(--linea) 0 1px, transparent 1px calc(100% / 15));
+    border-right: 1px solid var(--linea);
+  }
+  .hito {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    padding-top: 0.9rem;
+    transform: translateX(-50%);
+    color: var(--texto-secundario);
+    transition: color var(--dur-micro);
+  }
+  .hito::before { content: ''; position: absolute; top: 0; width: 1px; height: 0.75rem; background: currentColor; }
+  .hito-nombre { font: 600 var(--t-s) / 1 var(--f-body); white-space: nowrap; }
+  .hito[data-activo] { color: var(--texto); }
+  .hito[data-activo] .label { color: var(--acento-activo); }
+  .marcador {
+    position: absolute;
+    top: -3px;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--rgb);
+    box-shadow: var(--glow);
+    transform: translateX(-50%);
+  }
+
+  /* Tablet, mobile y sin movimiento: carrusel nativo con snap */
+  @media (max-width: 64rem) {
+    .pin { height: auto; padding-top: var(--s-seccion); }
+    .pista {
+      gap: var(--s-2);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--gutter);
+      padding-inline: var(--gutter);
+      scrollbar-width: none;
+    }
+    .pista::-webkit-scrollbar { display: none; }
+    .intro { flex-basis: 70vw; padding: 0; }
+    .panel { flex-basis: 70vw; grid-template-columns: 1fr; grid-template-rows: auto 1fr; gap: var(--s-3); padding: 0; scroll-snap-align: start; }
+    .intro { scroll-snap-align: start; }
+    .foto { order: -1; aspect-ratio: 4 / 5; border-radius: var(--radio-media); }
+    .info { padding: 0; align-content: start; }
+    .anio { left: auto; right: var(--s-2); bottom: auto; top: 0; font-size: 9rem; color: rgb(5 7 10 / 0.6); }
+    .eje { margin-top: var(--s-4); border-top: 0; }
+  }
+  @media (max-width: 47.99rem) {
+    .intro, .panel { flex-basis: 86vw; }
+    .nombre { font-size: var(--t-4xl); }
+    .regla { margin-inline: 1.5rem; }
+    .hito-nombre { display: none; }
+  }
+  :global(.reduced) .pin { height: auto; }
+  :global(.reduced) .pista { overflow-x: auto; scroll-snap-type: x mandatory; }
+  :global(.reduced) .panel, :global(.reduced) .intro { scroll-snap-align: start; }
+</style>

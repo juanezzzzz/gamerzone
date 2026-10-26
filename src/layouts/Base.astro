@@ -1,0 +1,45 @@
+---
+import '../styles/global.css'
+import { REVISION, NEGOCIO } from '../data/local'
+import { url } from '../lib/url'
+
+interface Props {
+  title?: string
+  description?: string
+}
+const {
+  title = `${NEGOCIO.nombre} · ${NEGOCIO.lema}`,
+  description = 'Sala de videojuegos en Colombia: PCs gamer, Xbox 360, One y Series S y sala VIP. Dos sedes, transnochón viernes y sábado.',
+} = Astro.props
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#05070a" />
+    {REVISION && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" href={url('/favicon.png')} type="image/png" />
+    <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+    <script is:inline>
+      document.documentElement.classList.add(
+        matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'motion'
+      )
+    </script>
+  </head>
+  <body class:list={{ revision: REVISION }}>
+    <slot />
+    <script>
+      import '../scripts/motion'
+    </script>
+  </body>
+</html>

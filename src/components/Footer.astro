@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets'
+import { NEGOCIO, REVISION, SEDES } from '../data/local'
+import emblema from '../assets/brand/gamerzone-logo.png'
+const anio = new Date().getFullYear()
+---
+
+<footer class="footer">
+  <div class="firma">
+    <Image src={emblema} alt={`Logo de ${NEGOCIO.nombre} ${NEGOCIO.lema}`} width={96} densities={[1, 2]} format="webp" class="emblema" />
+    <p class="marca">{NEGOCIO.nombre}</p>
+    <p class="lema">{NEGOCIO.lema}. Sala de videojuegos con PCs gamer, Xbox y sala VIP, en {SEDES.length} sedes.</p>
+  </div>
+  <nav class="links" aria-label="Pie de página">
+    <a href="#pcs">PCs</a>
+    <a href="#consolas">Consolas</a>
+    <a href="#vip">Sala VIP</a>
+    <a href="#tarifas">Tarifas</a>
+    <a href="#sedes">Sedes</a>
+  </nav>
+  <p class="label legal">
+    © {anio} {NEGOCIO.nombre}. Fotos de referencia: <a href="https://pixabay.com" target="_blank" rel="noopener">Pixabay</a>.
+    {REVISION && ' Sitio en revisión: los datos subrayados están por confirmar.'}
+  </p>
+</footer>
+
+<style>
+  .footer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--s-4);
+    padding: var(--s-5) var(--gutter) var(--s-4);
+    border-top: 1px solid var(--linea);
+  }
+  .marca { font: 800 var(--t-2xl) / 1 var(--f-display); font-stretch: 62%; text-transform: uppercase; }
+  .firma { display: grid; gap: var(--s-1); justify-items: start; }
+  .firma :global(.emblema) { width: 6rem; height: 6rem; margin-bottom: var(--s-2); }
+  .lema { font-size: var(--t-s); color: var(--texto-secundario); }
+  .links { display: flex; flex-wrap: wrap; gap: var(--s-3); font-size: var(--t-s); }
+  .links a { color: var(--texto-secundario); text-decoration: none; }
+  .links a:hover { color: var(--texto); }
+  .legal { grid-column: 1 / -1; color: var(--texto-secundario); }
+
+  @media (max-width: 47.99rem) {
+    .footer { grid-template-columns: 1fr; padding-bottom: calc(var(--s-6) + var(--s-4)); }
+  }
+</style>

@@ -1,0 +1,96 @@
+@import './tokens.css';
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: auto; }
+html.lenis, html.lenis body { height: auto; }
+.lenis-stopped { overflow: hidden; }
+
+body {
+  margin: 0;
+  background: var(--fondo-activo);
+  color: var(--texto);
+  font: 400 var(--t-m) / 1.6 var(--f-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+img, video, picture { display: block; max-width: 100%; }
+/* <picture> llena su contenedor para que el img interno pueda cubrirlo */
+picture { width: 100%; height: 100%; }
+a { color: inherit; }
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+:focus-visible { outline: 2px solid var(--acento-activo); outline-offset: 4px; }
+::selection { background: var(--acento-activo); color: var(--noche); }
+
+/* Roles tipográficos */
+.label {
+  font: 500 var(--t-xs) / 1.2 var(--f-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--acento-claro);
+}
+.display {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: var(--stretch-medio);
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.lead {
+  max-width: 38ch;
+  font-size: var(--t-l);
+  line-height: 1.55;
+  color: var(--texto-secundario);
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-1);
+  min-height: 3.25rem;
+  padding: 0 var(--s-4);
+  border-radius: var(--radio-boton);
+  background: var(--rgb);
+  color: var(--noche);
+  font: 700 var(--t-m) / 1 var(--f-body);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform var(--dur-micro) var(--ease-ui), box-shadow var(--dur-micro) var(--ease-ui);
+}
+.btn:hover { transform: translateY(-2px); box-shadow: var(--glow); }
+.btn-ghost {
+  background: transparent;
+  color: var(--texto);
+  box-shadow: inset 0 0 0 1px var(--linea);
+}
+.btn-ghost:hover { box-shadow: inset 0 0 0 1px var(--acento-activo), 0 0 24px -8px var(--acento-activo); }
+
+/* Texto relleno con el degradado RGB */
+.rgb-texto {
+  background: var(--rgb);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Datos por confirmar: visibles solo en modo revisión */
+.revision .pendiente {
+  text-decoration: underline dashed var(--texto-secundario);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+/* Estados iniciales de reveal: solo existen si hay JS y movimiento */
+.motion [data-reveal] { opacity: 0; transform: translateY(40px); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
