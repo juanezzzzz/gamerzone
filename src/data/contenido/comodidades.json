@@ -1,0 +1,33 @@
+{
+  "titulo": "Hecho para sesiones largas.",
+  "texto": "Más que un lugar para jugar: dos pisos frescos, buena silla y algo de tomar sin pausar la partida.",
+  "imagen": "escalera.webp",
+  "fotoTitulo": "Dos pisos",
+  "fotoTexto": "PCs abajo, sala VIP arriba.",
+  "items": [
+    {
+      "icono": "clima",
+      "titulo": "Clima",
+      "texto": "Aire acondicionado en todas las salas.",
+      "pendiente": false
+    },
+    {
+      "icono": "servicio",
+      "titulo": "Servicio",
+      "texto": "Te atendemos en tu puesto.",
+      "pendiente": false
+    },
+    {
+      "icono": "silla",
+      "titulo": "Sillas",
+      "texto": "Sillas gamer para sesiones largas.",
+      "pendiente": true
+    },
+    {
+      "icono": "tienda",
+      "titulo": "Tienda",
+      "texto": "Bebidas, snacks y café sin salir de la partida.",
+      "pendiente": false
+    }
+  ]
+}

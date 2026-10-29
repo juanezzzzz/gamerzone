@@ -1,9 +1,8 @@
 ---
-import { waLink } from '../data/local'
 ---
 
 <div class="mobile-cta" data-mobile-cta>
-  <a class="btn" href={waLink()} target="_blank" rel="noopener">Reservar sesión</a>
+  <a class="btn" href="#reserva">Reservar sesión</a>
 </div>
 
 <style>
@@ -16,10 +15,13 @@ import { waLink } from '../data/local'
       z-index: 40;
       display: block;
       padding: var(--s-2) var(--gutter) calc(var(--s-2) + env(safe-area-inset-bottom, 0px));
-      background: linear-gradient(to top, var(--noche) 55%, transparent);
+      background: rgb(11 13 16 / 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      box-shadow: 0 -1px 0 rgb(255 255 255 / 0.06);
       transition: transform 400ms var(--ease-ui), opacity 400ms;
     }
-    .mobile-cta .btn { width: 100%; }
+    .mobile-cta .btn { width: 100%; min-height: 3.25rem; }
     /* Se esconde en el hero, la VIP y el CTA final, donde ya hay botón */
     .mobile-cta.oculto { transform: translateY(110%); opacity: 0; }
   }

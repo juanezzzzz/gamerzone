@@ -1,0 +1,54 @@
+{
+  "pendiente": true,
+  "dias": [
+    {
+      "dia": "Lunes",
+      "abierto": true,
+      "abre": 10,
+      "cierra": 22,
+      "transnochon": false
+    },
+    {
+      "dia": "Martes",
+      "abierto": true,
+      "abre": 10,
+      "cierra": 22,
+      "transnochon": false
+    },
+    {
+      "dia": "Miércoles",
+      "abierto": true,
+      "abre": 10,
+      "cierra": 22,
+      "transnochon": false
+    },
+    {
+      "dia": "Jueves",
+      "abierto": true,
+      "abre": 10,
+      "cierra": 22,
+      "transnochon": false
+    },
+    {
+      "dia": "Viernes",
+      "abierto": true,
+      "abre": 10,
+      "cierra": 6,
+      "transnochon": true
+    },
+    {
+      "dia": "Sábado",
+      "abierto": true,
+      "abre": 10,
+      "cierra": 6,
+      "transnochon": true
+    },
+    {
+      "dia": "Domingo",
+      "abierto": true,
+      "abre": 12,
+      "cierra": 21,
+      "transnochon": false
+    }
+  ]
+}

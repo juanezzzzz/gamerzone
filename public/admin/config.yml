@@ -1,0 +1,314 @@
+# Panel de contenido de GamerZone (Sveltia CMS).
+# Cada sección edita un archivo de src/data/contenido/. Al guardar se hace un commit en main
+# y GitHub Actions republica la página en 1–2 minutos.
+
+backend:
+  name: github
+  repo: juanezzzzz/gamerzone
+  branch: main
+  commit_messages:
+    update: 'contenido: actualiza {{slug}}'
+    uploadMedia: 'contenido: sube {{path}}'
+    deleteMedia: 'contenido: borra {{path}}'
+
+# Imágenes: se guardan en src/assets/media y la página las optimiza (avif/webp por tamaño)
+media_folder: src/assets/media
+public_folder: /src/assets/media
+
+site_url: https://juanezzzzz.github.io/gamerzone/
+logo:
+  src: https://juanezzzzz.github.io/gamerzone/favicon.png
+
+# Campos que se repiten
+_pendiente: &pendiente
+  label: Por confirmar
+  name: pendiente
+  widget: boolean
+  required: false
+  hint: Márcalo si el dato todavía no está confirmado. Mientras el sitio esté en revisión, se ve subrayado.
+
+_hora: &hora
+  widget: select
+  options:
+    - { label: '00:00', value: 0 }
+    - { label: '01:00', value: 1 }
+    - { label: '02:00', value: 2 }
+    - { label: '03:00', value: 3 }
+    - { label: '04:00', value: 4 }
+    - { label: '05:00', value: 5 }
+    - { label: '06:00', value: 6 }
+    - { label: '07:00', value: 7 }
+    - { label: '08:00', value: 8 }
+    - { label: '09:00', value: 9 }
+    - { label: '10:00', value: 10 }
+    - { label: '11:00', value: 11 }
+    - { label: '12:00', value: 12 }
+    - { label: '13:00', value: 13 }
+    - { label: '14:00', value: 14 }
+    - { label: '15:00', value: 15 }
+    - { label: '16:00', value: 16 }
+    - { label: '17:00', value: 17 }
+    - { label: '18:00', value: 18 }
+    - { label: '19:00', value: 19 }
+    - { label: '20:00', value: 20 }
+    - { label: '21:00', value: 21 }
+    - { label: '22:00', value: 22 }
+    - { label: '23:00', value: 23 }
+
+_precio: &precio
+  widget: number
+  value_type: int
+  min: 0
+  hint: Solo el número, sin puntos ni signo. Ej. 4000 se ve como $4.000.
+
+_video: &video
+  widget: file
+  required: false
+  media_folder: /public/media
+  public_folder: /media
+  hint: Video corto en MP4 (menos de 10 MB). Se reproduce sin sonido.
+
+collections:
+  - name: contenido
+    label: Contenido de la página
+    files:
+      - name: portada
+        label: 1. Portada (lo primero que se ve)
+        file: src/data/contenido/portada.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Texto debajo del título, name: texto, widget: text }
+          - { <<: *video, label: Video de fondo, name: video }
+          - { label: Imagen mientras carga el video, name: poster, widget: image, required: false, media_folder: /public/media, public_folder: /media }
+
+      - name: precios
+        label: 2. Precios y planes
+        file: src/data/contenido/precios.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Texto, name: texto, widget: text }
+          - label: PC gamer
+            name: pc
+            widget: object
+            fields:
+              - { <<: *precio, label: Hora, name: hora }
+              - { <<: *precio, label: Media hora, name: mediaHora }
+              - { <<: *precio, label: Transnochón (viernes y sábado), name: transnochon }
+              - *pendiente
+          - label: Consola Xbox
+            name: consola
+            widget: object
+            fields:
+              - { <<: *precio, label: Hora por consola, name: hora }
+              - { <<: *precio, label: Control adicional por hora, name: controlAdicional }
+              - *pendiente
+          - { label: Nota debajo de los precios, name: nota, widget: string }
+          - { label: Título de los planes, name: planesTitulo, widget: string }
+          - label: Planes
+            name: planes
+            widget: list
+            summary: '{{fields.nombre}} · ${{fields.precio}}'
+            fields:
+              - { label: Nombre, name: nombre, widget: string }
+              - { label: Descripción, name: texto, widget: text }
+              - { label: Qué incluye, name: incluye, widget: list, field: { label: Ítem, name: item, widget: string } }
+              - { label: Duración, name: duracion, widget: string, hint: 'Ej. 3 h' }
+              - { label: Personas, name: personas, widget: string, hint: 'Ej. 5 o Hasta 6 personas' }
+              - { <<: *precio, label: Precio, name: precio }
+              - { label: Equivale a horas de PC, name: horasPc, widget: number, value_type: int, min: 0, default: 0, hint: 'Si el plan son horas de PC, pon cuántas y la página muestra cuánto se ahorra. Si no, deja 0.' }
+              - *pendiente
+
+      - name: vip
+        label: 3. Sala VIP
+        file: src/data/contenido/vip.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Lema, name: lema, widget: string }
+          - { label: Foto, name: imagen, widget: image }
+          - { label: Capacidad, name: capacidad, widget: string, hint: 'Ej. Hasta 6 personas' }
+          - { <<: *precio, label: Precio por hora, name: precioHora }
+          - { label: Qué incluye, name: features, widget: list, field: { label: Ítem, name: item, widget: string } }
+          - *pendiente
+
+      - name: horario
+        label: 4. Horario
+        file: src/data/contenido/horario.json
+        format: json
+        fields:
+          - { <<: *pendiente, hint: 'Márcalo si el horario todavía no está confirmado.' }
+          - label: Días
+            name: dias
+            widget: list
+            allow_add: false
+            allow_remove: false
+            allow_reorder: false
+            summary: '{{fields.dia}}'
+            fields:
+              - { label: Día, name: dia, widget: string, readonly: true }
+              - { label: Abre este día, name: abierto, widget: boolean, default: true }
+              - { <<: *hora, label: Abre a las, name: abre }
+              - { <<: *hora, label: Cierra a las, name: cierra, hint: 'Si cierra después de medianoche, elige la hora de la madrugada (ej. 06:00).' }
+              - { label: Es transnochón, name: transnochon, widget: boolean, default: false }
+
+      - name: sedes
+        label: 5. Sedes
+        file: src/data/contenido/sedes.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Texto, name: texto, widget: text }
+          - label: Sedes
+            name: sedes
+            widget: list
+            summary: '{{fields.nombre}} · {{fields.direccion}}'
+            fields:
+              - { label: Nombre, name: nombre, widget: string }
+              - { label: Dirección, name: direccion, widget: string }
+              - { label: Barrio, name: barrio, widget: string }
+              - { label: Enlace de Google Maps, name: mapa, widget: string, hint: 'Abre la sede en Google Maps, toca Compartir y pega el enlace.' }
+              - *pendiente
+
+      - name: negocio
+        label: 6. Contacto y estado del sitio
+        file: src/data/contenido/negocio.json
+        format: json
+        fields:
+          - label: WhatsApp
+            name: whatsapp
+            widget: object
+            fields:
+              - { label: Número para los enlaces, name: numero, widget: string, pattern: ['^57\d{10}$', 'Escribe 57 y los 10 dígitos, sin espacios. Ej. 573001234567'] }
+              - { label: Número como se muestra, name: visible, widget: string, hint: 'Ej. 300 123 4567' }
+              - *pendiente
+          - label: Instagram
+            name: instagram
+            widget: object
+            fields:
+              - { label: Usuario, name: texto, widget: string, hint: 'Con @. Ej. @gamerzone' }
+              - *pendiente
+          - label: Ciudad
+            name: ciudad
+            widget: object
+            fields:
+              - { label: Ciudad, name: texto, widget: string }
+              - *pendiente
+          - { label: Sitio en revisión, name: revision, widget: boolean, hint: 'Mientras esté activo, Google no indexa la página y los datos por confirmar se ven subrayados. Desactívalo cuando todo esté confirmado.' }
+
+      - name: pcs
+        label: 7. PCs
+        file: src/data/contenido/pcs.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Texto (el precio por hora se agrega solo), name: texto, widget: text }
+          - label: Características
+            name: specs
+            widget: list
+            summary: '{{fields.valor}}'
+            fields:
+              - { label: Nombre interno, name: nombre, widget: string, hint: 'Se usa para lectores de pantalla. Ej. Monitor' }
+              - { label: Título grande, name: valor, widget: string, hint: 'Ej. Monitores de 165 Hz' }
+              - { label: Texto, name: nota, widget: string }
+              - { label: Foto, name: imagen, widget: image, required: false, hint: 'Se usa si no hay video.' }
+              - { <<: *video, label: Video (opcional), name: video }
+              - { label: Imagen mientras carga el video, name: poster, widget: image, required: false, media_folder: /public/media, public_folder: /media }
+              - *pendiente
+
+      - name: consolas
+        label: 8. Consolas
+        file: src/data/contenido/consolas.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Texto (el precio por hora se agrega solo), name: texto, widget: text }
+          - label: Consolas
+            name: consolas
+            widget: list
+            summary: '{{fields.nombre}} ({{fields.anio}})'
+            fields:
+              - { label: Nombre, name: nombre, widget: string }
+              - { label: Año de lanzamiento, name: anio, widget: string, pattern: ['^\d{4}$', 'Cuatro dígitos. Ej. 2013'] }
+              - { label: Foto, name: imagen, widget: image }
+              - { label: Texto, name: texto, widget: text }
+              - { label: Datos cortos, name: ficha, widget: list, field: { label: Dato, name: dato, widget: string } }
+
+      - name: juegos
+        label: 9. Juegos
+        file: src/data/contenido/juegos.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - label: Juegos
+            name: juegos
+            widget: list
+            summary: '{{fields.nombre}}'
+            fields:
+              - { label: Nombre, name: nombre, widget: string, hint: 'Escribe EA Sports FC, no FIFA.' }
+              - { label: Género, name: genero, widget: string }
+              - label: Dónde se juega
+                name: en
+                widget: select
+                multiple: true
+                min: 1
+                options:
+                  - { label: PC, value: pc }
+                  - { label: Xbox, value: xbox }
+
+      - name: comodidades
+        label: 10. Comodidades
+        file: src/data/contenido/comodidades.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Texto, name: texto, widget: text }
+          - { label: Foto grande, name: imagen, widget: image }
+          - { label: Título de la foto, name: fotoTitulo, widget: string }
+          - { label: Texto de la foto, name: fotoTexto, widget: string }
+          - label: Comodidades
+            name: items
+            widget: list
+            summary: '{{fields.titulo}}'
+            fields:
+              - label: Ícono
+                name: icono
+                widget: select
+                options:
+                  - { label: Clima / aire, value: clima }
+                  - { label: Servicio, value: servicio }
+                  - { label: Silla, value: silla }
+                  - { label: Tienda / café, value: tienda }
+                  - { label: Pisos, value: pisos }
+                  - { label: Noche, value: noche }
+                  - { label: Control, value: control }
+                  - { label: Monitor, value: monitor }
+                  - { label: Grupo, value: grupo }
+                  - { label: Pago, value: pago }
+              - { label: Título, name: titulo, widget: string }
+              - { label: Texto, name: texto, widget: string }
+              - *pendiente
+
+      - name: faq
+        label: 11. Preguntas frecuentes
+        file: src/data/contenido/faq.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - label: Preguntas
+            name: preguntas
+            widget: list
+            summary: '{{fields.pregunta}}'
+            fields:
+              - { label: Pregunta, name: pregunta, widget: string }
+              - { label: Respuesta, name: respuesta, widget: text }
+              - *pendiente
+
+      - name: reserva
+        label: 12. Reserva (final de la página)
+        file: src/data/contenido/reserva.json
+        format: json
+        fields:
+          - { label: Título, name: titulo, widget: string }
+          - { label: Texto, name: texto, widget: text }

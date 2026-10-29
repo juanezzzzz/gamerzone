@@ -3,3 +3,8 @@ dist
 .cache
 .env
 .astro
+
+# Impeccable: capturas de revisión y bocetos de decisión (locales)
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/payload-*.json

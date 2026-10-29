@@ -36,6 +36,8 @@ const IMAGES = [
   { id: 1136046, name: 'xbox-one', grade: 'vivo' },
   { id: 10225432, name: 'xbox-series-s', grade: 'vivo' },
   { id: 5268574, name: 'gpu', grade: 'vivo' },
+  // Silueta frente a la pantalla: la spec de monitor del PC
+  { id: 3923644, name: 'monitor', grade: 'vivo' },
   { id: 7334038, name: 'escalera', grade: 'vivo' },
   // La pantalla de esta foto muestra un logo de estudio: se desenfoca esa zona.
   { id: 2270554, name: 'vip', grade: 'vip', blur: 'iw*0.455:ih*0.31:iw*0.32:ih*0.34' },

@@ -1,0 +1,20 @@
+{
+  "sedes": [
+    {
+      "nombre": "Sede 1",
+      "direccion": "Calle 00 # 00-00",
+      "barrio": "Barrio por confirmar",
+      "mapa": "https://maps.google.com/?q=GamerZone+E-Sports+Center",
+      "pendiente": true
+    },
+    {
+      "nombre": "Sede 2",
+      "direccion": "Carrera 00 # 00-00",
+      "barrio": "Barrio por confirmar",
+      "mapa": "https://maps.google.com/?q=GamerZone+E-Sports+Center",
+      "pendiente": true
+    }
+  ],
+  "titulo": "Dos sedes. Te esperamos.",
+  "texto": "Mismo horario en las dos. Para PC y consola llegas directo; la sala VIP se reserva."
+}

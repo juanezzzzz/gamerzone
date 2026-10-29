@@ -1,0 +1,13 @@
+{
+  "titulo": "Sala VIP",
+  "lema": "Tu espacio. Tu juego.",
+  "imagen": "vip.webp",
+  "capacidad": "Hasta 6 personas",
+  "precioHora": 30000,
+  "features": [
+    "Pantalla grande",
+    "Sofá para el grupo",
+    "Consola y controles incluidos"
+  ],
+  "pendiente": true
+}

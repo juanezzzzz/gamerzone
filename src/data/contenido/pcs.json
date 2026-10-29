@@ -1,0 +1,42 @@
+{
+  "titulo": "Rendimiento sin compromiso.",
+  "texto": "PCs gamer en el primer piso, listos para jugar.",
+  "specs": [
+    {
+      "nombre": "Gráfica",
+      "valor": "Gráficas serie RTX",
+      "nota": "Juegos actuales en calidad alta.",
+      "imagen": "gpu.webp",
+      "video": "",
+      "poster": "",
+      "pendiente": true
+    },
+    {
+      "nombre": "Monitor",
+      "valor": "Monitores de alta frecuencia",
+      "nota": "Imagen fluida para shooters y competitivo.",
+      "imagen": "monitor.webp",
+      "video": "",
+      "poster": "",
+      "pendiente": true
+    },
+    {
+      "nombre": "Periféricos",
+      "valor": "Teclado, mouse y audífonos gamer",
+      "nota": "En cada puesto, listos para jugar.",
+      "imagen": "",
+      "video": "/media/teclado.mp4",
+      "poster": "/media/teclado-poster.webp",
+      "pendiente": true
+    },
+    {
+      "nombre": "Equipos",
+      "valor": "Equipos refrigerados",
+      "nota": "Sesiones largas sin que el PC se caliente.",
+      "imagen": "",
+      "video": "/media/ventilador.mp4",
+      "poster": "/media/ventilador-poster.webp",
+      "pendiente": true
+    }
+  ]
+}

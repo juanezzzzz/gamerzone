@@ -1,0 +1,55 @@
+{
+  "titulo": "Lo que siempre nos preguntan.",
+  "preguntas": [
+    {
+      "pregunta": "¿Tengo que reservar?",
+      "respuesta": "Para PC y consola puedes llegar directo. Para la sala VIP sí recomendamos reservar por WhatsApp.",
+      "pendiente": true
+    },
+    {
+      "pregunta": "¿Cómo se cobra?",
+      "respuesta": "Por tiempo jugado. Pagas al terminar por las horas que usaste.",
+      "pendiente": true
+    },
+    {
+      "pregunta": "¿Puedo usar mi cuenta?",
+      "respuesta": "Sí. Inicias sesión con tu cuenta en el PC o la consola y la cierras al irte.",
+      "pendiente": true
+    },
+    {
+      "pregunta": "¿Si mi juego no está instalado?",
+      "respuesta": "Escríbenos antes de venir y lo dejamos listo.",
+      "pendiente": true
+    },
+    {
+      "pregunta": "¿Hay edad mínima?",
+      "respuesta": "Los menores de 14 años vienen con un adulto.",
+      "pendiente": true
+    },
+    {
+      "pregunta": "¿Cómo puedo pagar?",
+      "respuesta": "Efectivo, transferencia, Nequi o tarjeta por datáfono.",
+      "pendiente": false
+    },
+    {
+      "pregunta": "¿Qué es el transnochón?",
+      "respuesta": "Viernes y sábado seguimos abiertos toda la noche. Ideal para maratones con tu grupo.",
+      "pendiente": true
+    },
+    {
+      "pregunta": "¿Hacen torneos?",
+      "respuesta": "Sí, organizamos torneos. Escríbenos por WhatsApp para saber cuál es el próximo y cómo inscribirte.",
+      "pendiente": true
+    },
+    {
+      "pregunta": "¿Venden bonos de regalo?",
+      "respuesta": "Sí. Un bono de tiempo de juego es el regalo perfecto para un gamer. Pídelo por WhatsApp.",
+      "pendiente": true
+    },
+    {
+      "pregunta": "¿En cuál sede reservo?",
+      "respuesta": "Escríbenos por WhatsApp y dinos a cuál sede vas; te confirmamos la disponibilidad.",
+      "pendiente": true
+    }
+  ]
+}

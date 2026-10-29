@@ -14,7 +14,7 @@ Director de arte que también programa. Optimiza para dirección artística, no 
 6. Las composiciones más débiles se rediseñan, no se parchean.
 
 ## Reglas
-- Todo dato del negocio vive en `src/data/local.ts`. Lo no confirmado lleva `pendiente: true`. Mientras `REVISION = true` la página lleva noindex.
+- Todo dato y texto editable del negocio vive en `src/data/contenido/*.json`, que el cliente edita desde el panel `/admin` (Sveltia CMS, `public/admin/config.yml`). `src/data/local.ts` los lee y los adapta para las secciones. Un campo nuevo se agrega en los tres lugares: JSON, `config.yml` y `local.ts`. Lo no confirmado lleva `pendiente: true`. Mientras `revision` sea true en `negocio.json`, la página lleva noindex.
 - Nunca dos secciones seguidas con la misma composición (ver tabla en `ART-DIRECTION.md`).
 - Tokens de `src/styles/tokens.css` para color, tipo y espacio. Sin `!important`, sin estilos inline, sin Tailwind.
 - El dorado (`--vip`) solo existe dentro de la sala VIP y en su precio.

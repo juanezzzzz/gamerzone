@@ -1,16 +1,12 @@
 ---
-import { JUEGOS, waLink } from '../data/local'
-// Tres filas con orden distinto para que no se lean como copia
-const filas = [JUEGOS, [...JUEGOS.slice(3), ...JUEGOS.slice(0, 3)], [...JUEGOS.slice(5), ...JUEGOS.slice(0, 5)]]
+import { JUEGOS, TEXTOS, waLink } from '../data/local'
+import Icono from './Icono.astro'
+// Dos filas con orden distinto para que no se lean como copia
+const filas = [JUEGOS, [...JUEGOS.slice(4), ...JUEGOS.slice(0, 4)]]
 ---
 
 <section class="juegos" id="juegos" data-juegos>
-  <header class="cabeza">
-    <p class="label">Juegos</p>
-    <p class="lead">Los más pedidos ya están instalados. ¿No ves el tuyo? <a href={waLink('Hola, ¿tienen instalado este juego?')} target="_blank" rel="noopener">Escríbenos</a> y te lo dejamos listo.</p>
-  </header>
-
-
+  <!-- Ambiente: los nombres pasan en dos filas; el scroll las acelera -->
   <div class="marquesina" aria-hidden="true">
     {
       filas.map((fila, i) => (
@@ -18,10 +14,7 @@ const filas = [JUEGOS, [...JUEGOS.slice(3), ...JUEGOS.slice(0, 3)], [...JUEGOS.s
           {[0, 1].map(() => (
             <div class="tramo">
               {fila.map((j) => (
-                <span class="juego">
-                  {j.nombre}
-                  <sup class="label">{j.tag}</sup>
-                </span>
+                <span class="juego">{j.nombre}</span>
               ))}
             </div>
           ))}
@@ -30,30 +23,38 @@ const filas = [JUEGOS, [...JUEGOS.slice(3), ...JUEGOS.slice(0, 3)], [...JUEGOS.s
     }
   </div>
 
-  <!-- Lista consultable: la marquesina da ambiente, esta lista responde "¿tienen mi juego?" -->
-  <div class="catalogo" data-catalogo>
-    <div class="catalogo-cabeza">
-      <h2 class="display titulo">Juegos disponibles</h2>
+  <!-- Lista consultable: responde "¿tienen mi juego?" -->
+  <div class="contenedor catalogo" data-catalogo>
+    <header class="cabeza" data-reveal>
+      <h2 class="titulo">{TEXTOS.juegos.titulo}</h2>
+      <p class="lead">
+        Los más pedidos ya están instalados. ¿No ves el tuyo? <a href={waLink('Hola, ¿tienen instalado este juego?')} target="_blank" rel="noopener">Escríbenos</a> y te lo dejamos listo.
+      </p>
       <div class="filtros" role="group" aria-label="Filtrar por plataforma">
         {[['todos', 'Todos'], ['pc', 'PC'], ['xbox', 'Xbox']].map(([v, t], i) => (
           <button type="button" class="filtro" data-filtro={v} aria-pressed={i === 0 ? 'true' : 'false'}>{t}</button>
         ))}
       </div>
-    </div>
+    </header>
     <ul class="lista">
       {
         JUEGOS.map((j) => (
           <li class="item" data-en={j.en.join(' ')}>
             <span class="nombre">{j.nombre}</span>
-            <span class="label genero">{j.tag}</span>
+            <span class="genero">{j.tag}</span>
             <span class="plataformas">
-              {j.en.map((p) => <span class:list={['plataforma', p]}>{p === 'pc' ? 'PC' : 'Xbox'}</span>)}
+              {j.en.map((p) => (
+                <span class="plataforma">
+                  <Icono nombre={p === 'pc' ? 'monitor' : 'control'} />
+                  {p === 'pc' ? 'PC' : 'Xbox'}
+                </span>
+              ))}
             </span>
           </li>
         ))
       }
     </ul>
-    <p class="label nota">Lista de referencia. Pregunta por tu juego antes de venir.</p>
+    <p class="nota dato">Lista de referencia. Pregunta por tu juego antes de venir.</p>
   </div>
 </section>
 
@@ -72,84 +73,86 @@ const filas = [JUEGOS, [...JUEGOS.slice(3), ...JUEGOS.slice(0, 3)], [...JUEGOS.s
 </script>
 
 <style>
-  .juegos {
-    padding-block: var(--s-seccion) var(--s-5);
-    overflow: hidden;
-    background:
-      radial-gradient(ellipse 40% 50% at 85% 55%, var(--halo-magenta), transparent 70%),
-      radial-gradient(ellipse 40% 50% at 10% 70%, var(--halo-cian), transparent 70%);
-  }
-  .cabeza {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: var(--s-4);
-    padding: 0 var(--gutter) var(--s-5);
-  }
-  .cabeza a { color: var(--acento-activo); }
+  .juegos { padding-block: var(--s-seccion); overflow: clip; }
 
-  .marquesina { display: grid; gap: var(--s-1); }
-  .fila { display: flex; width: max-content; will-change: transform; }
-  .tramo { display: flex; gap: var(--s-5); padding-right: var(--s-5); }
+  .marquesina { display: grid; gap: 0.25rem; margin-bottom: var(--s-6); }
+  .fila { display: flex; width: max-content; }
+  .tramo { display: flex; }
   .juego {
-    display: inline-flex;
-    align-items: flex-start;
-    gap: var(--s-1);
+    padding-right: 0.6em;
+    font: 800 clamp(3rem, 8vw, 7rem) / 1.05 var(--f-sans);
+    font-stretch: var(--ancho-titulo);
+    letter-spacing: -0.03em;
     white-space: nowrap;
-    font: 800 clamp(3rem, 9vw, 9rem) / 1 var(--f-display);
-    font-stretch: 58%;
-    text-transform: uppercase;
   }
-  .fila:nth-child(2) .juego { color: transparent; -webkit-text-stroke: 1.5px var(--acento); text-shadow: 0 0 22px rgb(47 224 255 / 0.35); }
-  .fila:first-child .juego:nth-child(3n + 2) {
-    background: var(--rgb);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .fila:nth-child(3) .juego { color: var(--texto-secundario); font-stretch: 100%; font-size: clamp(2rem, 5vw, 5rem); }
-  .juego sup { padding-top: 0.6em; font-size: var(--t-xs); color: var(--acento-2); }
+  .juego::after { content: '·'; padding-left: 0.6em; color: var(--acento); }
+  .fila:nth-child(2) .juego { color: var(--grafito-3); }
+  .fila:nth-child(2) .juego::after { color: var(--grafito-3); }
 
-  .catalogo { display: grid; gap: var(--s-3); padding: var(--s-6) var(--gutter) 0; }
-  .catalogo-cabeza { display: flex; justify-content: space-between; align-items: flex-end; gap: var(--s-3); flex-wrap: wrap; }
-  .titulo { font-size: var(--t-4xl); font-stretch: 62%; }
-  .filtros { display: flex; gap: var(--s-1); }
+  .catalogo {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: var(--s-4) var(--s-6);
+    align-items: start;
+  }
+  .cabeza { display: grid; gap: var(--s-2); }
+  .cabeza a { color: var(--acento); }
+  .filtros {
+    display: inline-flex;
+    justify-self: start;
+    gap: 0.25rem;
+    margin-top: var(--s-2);
+    padding: 0.25rem;
+    border-radius: var(--radio-boton);
+    background: var(--grafito-2);
+  }
   .filtro {
     min-height: 2.5rem;
-    padding: 0 var(--s-3);
-    border: 1px solid var(--linea);
+    padding: 0 1.25rem;
+    border: 0;
     border-radius: var(--radio-boton);
     background: transparent;
-    color: var(--texto-secundario);
-    font: 600 var(--t-s) / 1 var(--f-body);
+    color: var(--sobre-oscuro-2);
+    font: 600 var(--t-s) / 1 var(--f-sans);
     cursor: pointer;
-    transition: color var(--dur-micro), border-color var(--dur-micro);
+    transition: background-color var(--dur-micro), color var(--dur-micro);
   }
-  .filtro:hover { color: var(--texto); }
-  .filtro[aria-pressed='true'] { border-color: var(--acento); color: var(--texto); box-shadow: 0 0 18px -8px var(--acento); }
-  .lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gutter); }
+  .filtro:hover { color: var(--sobre-oscuro); }
+  .filtro[aria-pressed='true'] { background: var(--sobre-oscuro); color: var(--grafito); }
+
+  .lista { border-top: 1px solid var(--linea-oscura); }
   .item {
     display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: baseline;
-    gap: var(--s-2);
-    padding-block: var(--s-2);
-    border-bottom: 1px solid var(--linea);
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: var(--s-3);
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--linea-oscura);
   }
   .item[hidden] { display: none; }
-  .nombre { font-size: var(--t-xl); }
-  .genero { color: var(--texto-secundario); }
-  .plataformas { display: flex; gap: 0.3rem; }
-  .plataforma { padding: 0.2rem 0.45rem; border-radius: var(--radio-media); font: 600 var(--t-xs) / 1 var(--f-mono); }
-  .plataforma.pc { background: rgb(47 224 255 / 0.14); color: var(--acento); }
-  .plataforma.xbox { background: rgb(255 47 166 / 0.14); color: var(--acento-2); }
-  .nota { color: var(--texto-secundario); }
-
-  @media (max-width: 47.99rem) {
-    .cabeza { flex-direction: column; align-items: flex-start; }
-    .lista { grid-template-columns: 1fr; }
-    .item { grid-template-columns: 1fr auto; }
-    .genero { display: none; }
+  .nombre { font: 700 var(--t-l) / 1.2 var(--f-sans); }
+  .genero { font-size: var(--t-s); color: var(--sobre-oscuro-2); }
+  .plataformas { display: flex; gap: 0.4rem; min-width: 9.5rem; justify-content: flex-end; }
+  .plataforma {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: var(--radio-boton);
+    background: var(--grafito-2);
+    font: 600 var(--t-xs) / 1.2 var(--f-sans);
   }
-  :global(.reduced) .marquesina { overflow-x: auto; }
+  .plataforma :global(.icono) { width: 0.95rem; height: 0.95rem; color: var(--acento); }
+  .nota { grid-column: 2; }
+
+  @media (max-width: 64rem) {
+    .catalogo { grid-template-columns: 1fr; }
+    .nota { grid-column: 1; }
+  }
+  @media (max-width: 47.99rem) {
+    .item { grid-template-columns: minmax(0, 1fr) auto; row-gap: 0.25rem; }
+    .genero { grid-row: 2; }
+    .plataformas { grid-row: 1 / span 2; grid-column: 2; min-width: 0; flex-direction: column; align-items: flex-end; }
+  }
+  :global(.reduced) .marquesina { display: none; }
 </style>

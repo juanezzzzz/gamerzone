@@ -1,37 +1,245 @@
 ---
-import { NEGOCIO, waLink } from '../data/local'
-import { url } from '../lib/url'
+import { NEGOCIO, SEDES, PLANES, TEXTOS, PORTADA_MEDIA } from '../data/local'
+import Icono from './Icono.astro'
+// Qué se quiere reservar: tipos de puesto y planes, en el orden de la página
+const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p.nombre)]
 ---
 
 <section class="cta" id="reserva" data-cta>
-  <video src={url('/media/piso1-sala.mp4')} poster={url('/media/piso1-sala-poster.webp')} muted loop playsinline preload="none"></video>
-  <div class="sombra"></div>
-  <div class="contenido">
-    <h2 class="pregunta" data-cta-titulo>¿Jugamos?</h2>
-    <p class="lead cierre">Aparta tu sesión por WhatsApp y llega directo a jugar.</p>
-    <div class="acciones">
-      <a class="btn" href={waLink()} target="_blank" rel="noopener">Reservar sesión</a>
-      <p class="numero">
-        <span class="label">O escribe al</span>
-        <span class:list={{ pendiente: NEGOCIO.whatsapp.pendiente }}>{NEGOCIO.whatsapp.visible}</span>
-      </p>
+  <div class="tarjeta" data-cta-tarjeta>
+    <video src={PORTADA_MEDIA.video} poster={PORTADA_MEDIA.poster} muted loop playsinline preload="none"></video>
+    <div class="sombra"></div>
+
+    <div class="contenido">
+      <div class="texto" data-reveal>
+        <h2 class="titulo-xl">{TEXTOS.reserva.titulo}</h2>
+        <p class="lead">{TEXTOS.reserva.texto}</p>
+        <p class="numero">
+          <Icono nombre="mensaje" />
+          O escribe al <span class:list={{ pendiente: NEGOCIO.whatsapp.pendiente }}>{NEGOCIO.whatsapp.visible}</span>
+        </p>
+      </div>
+
+      <!-- Panel de reserva: arma el mensaje y abre WhatsApp con todo escrito -->
+      <form class="panel claro" data-reserva data-wa={NEGOCIO.whatsapp.numero} novalidate data-reveal>
+        <h3 class="panel-titulo">Reserva tu sesión</h3>
+
+        <div class="campo">
+          <label for="r-nombre">Tu nombre</label>
+          <input id="r-nombre" name="nombre" type="text" autocomplete="given-name" required placeholder="Ej.: Juan" />
+          <p class="error" data-error="nombre">Escribe tu nombre para saber a quién confirmarle.</p>
+        </div>
+
+        <fieldset class="campo">
+          <legend>Sede</legend>
+          <div class="segmentos">
+            {
+              SEDES.map((s, i) => (
+                <label class="segmento">
+                  <input type="radio" name="sede" value={s.nombre} checked={i === 0} />
+                  <span>{s.nombre}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+
+        <div class="campo">
+          <label for="r-que">Qué quieres reservar</label>
+          <select id="r-que" name="que">
+            {opciones.map((o) => <option value={o}>{o}</option>)}
+          </select>
+        </div>
+
+        <div class="fila">
+          <div class="campo">
+            <label for="r-dia">Día</label>
+            <input id="r-dia" name="dia" type="date" required data-hoy />
+            <p class="error" data-error="dia">Elige el día.</p>
+          </div>
+          <div class="campo">
+            <label for="r-hora">Hora</label>
+            <input id="r-hora" name="hora" type="time" step="1800" value="18:00" required />
+            <p class="error" data-error="hora">Elige la hora.</p>
+          </div>
+          <div class="campo">
+            <label for="r-personas">Personas</label>
+            <input id="r-personas" name="personas" type="number" inputmode="numeric" min="1" max="20" value="1" required />
+            <p class="error" data-error="personas">Entre 1 y 20.</p>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="r-nota">Comentario <span class="opcional">(opcional)</span></label>
+          <textarea id="r-nota" name="nota" rows="2" placeholder="Ej.: queremos jugar EA Sports FC en la misma fila"></textarea>
+        </div>
+
+        <button class="btn enviar" type="submit">
+          <Icono nombre="mensaje" />
+          Enviar por WhatsApp
+        </button>
+        <p class="aviso">Se abre WhatsApp con tu mensaje listo. Solo tienes que enviarlo.</p>
+      </form>
     </div>
   </div>
 </section>
 
-<style>
-  .cta { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; }
-  video, .sombra { position: absolute; inset: 0; width: 100%; height: 100%; }
-  video { object-fit: cover; }
-  .sombra { background: linear-gradient(to top, var(--noche) 5%, rgb(5 7 10 / 0.4)); }
-  .contenido { position: relative; display: grid; gap: var(--s-5); padding: 0 var(--gutter) var(--s-6); }
-  .pregunta {
-    font: 900 clamp(5rem, 21vw, 22rem) / 0.8 var(--f-display);
-    font-stretch: 50%;
-    text-transform: uppercase;
-    white-space: nowrap;
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-reserva]')
+  if (form) {
+    // El día arranca hoy (hora de Colombia) y no deja elegir fechas pasadas
+    const hoy = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' })
+    const dia = form.querySelector<HTMLInputElement>('[data-hoy]')
+    if (dia) {
+      dia.min = hoy
+      dia.value = hoy
+    }
+
+    const campo = (n: string) => form.elements.namedItem(n) as HTMLInputElement
+    const marcar = (n: string, ok: boolean) => {
+      const el = campo(n)
+      el.toggleAttribute('aria-invalid', !ok)
+      form.querySelector(`[data-error="${n}"]`)?.toggleAttribute('data-visible', !ok)
+      return ok
+    }
+    const validar = () => {
+      const p = Number(campo('personas').value)
+      const checks = [
+        marcar('nombre', campo('nombre').value.trim().length > 0),
+        marcar('dia', !!campo('dia').value && campo('dia').value >= hoy),
+        marcar('hora', !!campo('hora').value),
+        marcar('personas', Number.isInteger(p) && p >= 1 && p <= 20),
+      ]
+      return checks.every(Boolean)
+    }
+    // Corrige el error en cuanto la persona edita el campo
+    form.addEventListener('input', (e) => {
+      const n = (e.target as HTMLInputElement).name
+      if (form.querySelector(`[data-error="${n}"][data-visible]`)) validar()
+    })
+
+    const fecha = (iso: string) =>
+      new Date(`${iso}T12:00:00`).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      if (!validar()) {
+        form.querySelector<HTMLElement>('[aria-invalid]')?.focus()
+        return
+      }
+      const d = new FormData(form)
+      const lineas = [
+        `Hola, soy ${String(d.get('nombre')).trim()} y quiero reservar en GamerZone.`,
+        `• Sede: ${d.get('sede')}`,
+        `• Para: ${d.get('que')}`,
+        `• Día: ${fecha(String(d.get('dia')))}, a las ${d.get('hora')}`,
+        `• Personas: ${d.get('personas')}`,
+      ]
+      const nota = String(d.get('nota') || '').trim()
+      if (nota) lineas.push(`• Comentario: ${nota}`)
+      window.open(`https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(lineas.join('\n'))}`, '_blank', 'noopener')
+    })
   }
-  .cierre { color: var(--texto); }
-  .acciones { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; }
-  .numero { display: grid; gap: 0.2rem; font-size: var(--t-xl); }
+</script>
+
+<style>
+  .cta { padding: var(--s-seccion) var(--gutter) var(--s-5); }
+  .tarjeta {
+    position: relative;
+    width: min(100%, var(--ancho-max));
+    margin-inline: auto;
+    overflow: hidden;
+    border-radius: var(--radio-l);
+    background: var(--grafito-2);
+  }
+  video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .sombra { position: absolute; inset: 0; background: linear-gradient(90deg, rgb(11 13 16 / 0.85), rgb(11 13 16 / 0.55)); }
+
+  .contenido {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+    align-items: center;
+    gap: var(--s-5);
+    padding: clamp(2rem, 5vw, 4.5rem);
+  }
+  .texto { display: grid; gap: var(--s-3); }
+  .texto .lead { color: var(--sobre-oscuro); }
+  .numero { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--t-s); color: var(--sobre-oscuro-2); }
+  .numero :global(.icono) { width: 1.1rem; height: 1.1rem; }
+
+  /* Panel claro sobre el video: la información se llena sobre claro */
+  .panel {
+    display: grid;
+    gap: var(--s-2);
+    padding: var(--s-4);
+    border-radius: var(--radio-l);
+    background: var(--blanco);
+    box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.5);
+  }
+  .panel-titulo { font: 800 var(--t-xl) / 1.1 var(--f-sans); font-stretch: 106%; }
+
+  .campo { display: grid; gap: 0.35rem; min-width: 0; margin: 0; padding: 0; border: 0; }
+  label, legend { padding: 0; font: 600 var(--t-s) / 1.3 var(--f-sans); }
+  .opcional { font-weight: 400; color: var(--tinta-2); }
+  input, select, textarea {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--linea-clara);
+    border-radius: var(--radio-s);
+    background: var(--nube);
+    color: var(--tinta);
+    font: 400 var(--t-m) / 1.3 var(--f-sans);
+    caret-color: var(--acento-texto);
+    transition: border-color var(--dur-micro), background-color var(--dur-micro);
+  }
+  textarea { resize: vertical; }
+  input::placeholder, textarea::placeholder { color: var(--tinta-2); }
+  input:hover, select:hover, textarea:hover { border-color: var(--tinta-2); }
+  input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid var(--acento-texto);
+    outline-offset: 1px;
+    border-color: transparent;
+    background: var(--blanco);
+  }
+  [aria-invalid] { border-color: var(--error); background: var(--error-fondo); }
+  .error { display: none; font-size: var(--t-xs); color: var(--error); }
+  .error[data-visible] { display: block; }
+
+  /* Día a todo el ancho; hora y personas comparten fila */
+  .fila { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2) var(--s-1); }
+  .fila .campo:first-child { grid-column: 1 / -1; }
+
+  /* Sedes como control segmentado */
+  .segmentos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.25rem; padding: 0.25rem; border-radius: var(--radio-s); background: var(--nube); }
+  .segmento { position: relative; cursor: pointer; }
+  .segmento input { position: absolute; inset: 0; min-height: 0; opacity: 0; cursor: pointer; }
+  .segmento span {
+    display: grid;
+    place-items: center;
+    min-height: 2.5rem;
+    border-radius: calc(var(--radio-s) - 0.25rem);
+    font: 600 var(--t-s) / 1 var(--f-sans);
+    color: var(--tinta-2);
+    transition: background-color var(--dur-micro), color var(--dur-micro);
+  }
+  .segmento input:checked + span { background: var(--blanco); color: var(--tinta); box-shadow: var(--sombra-tarjeta); }
+  .segmento input:focus-visible + span { outline: 2px solid var(--acento-texto); outline-offset: 1px; }
+
+  .enviar { width: 100%; margin-top: var(--s-1); min-height: 3.25rem; }
+  .claro .enviar:not(.btn-ghost) { background: var(--acento); color: var(--sobre-acento); }
+  .claro .enviar:not(.btn-ghost):hover { background: var(--acento-hover); }
+  .enviar :global(.icono) { width: 1.2rem; height: 1.2rem; }
+  .aviso { font-size: var(--t-xs); color: var(--tinta-2); text-align: center; }
+
+  @media (max-width: 64rem) {
+    .contenido { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 47.99rem) {
+    .cta { padding-inline: 0; padding-bottom: 0; }
+    .tarjeta { border-radius: 0; }
+    .contenido { padding: var(--s-5) var(--gutter); }
+    .panel { padding: var(--s-3); }
+  }
 </style>

@@ -7,84 +7,143 @@ html.lenis, html.lenis body { height: auto; }
 
 body {
   margin: 0;
-  background: var(--fondo-activo);
-  color: var(--texto);
-  font: 400 var(--t-m) / 1.6 var(--f-body);
+  background: var(--grafito);
+  color: var(--sobre-oscuro);
+  font: 400 var(--t-m) / 1.6 var(--f-sans);
+  font-stretch: var(--ancho-texto);
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  font-variant-numeric: tabular-nums;
 }
 img, video, picture { display: block; max-width: 100%; }
 /* <picture> llena su contenedor para que el img interno pueda cubrirlo */
 picture { width: 100%; height: 100%; }
-a { color: inherit; }
+a { color: inherit; text-underline-offset: 0.2em; }
 h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
-:focus-visible { outline: 2px solid var(--acento-activo); outline-offset: 4px; }
-::selection { background: var(--acento-activo); color: var(--noche); }
+:focus-visible { outline: 2px solid var(--acento); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--acento); color: var(--sobre-acento); }
+
+/* Barra de scroll del sitio */
+html { scrollbar-color: var(--grafito-3) var(--grafito); }
+
+/* Secciones claras: la información se lee sobre claro */
+.claro {
+  background: var(--nube);
+  color: var(--tinta);
+  color-scheme: light;
+}
+.claro ::selection { background: var(--tinta); color: var(--blanco); }
+
+/* Contenedor centrado */
+.contenedor {
+  width: min(100% - 2 * var(--gutter), var(--ancho-max));
+  margin-inline: auto;
+}
 
 /* Roles tipográficos */
-.label {
-  font: 500 var(--t-xs) / 1.2 var(--f-mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--acento-claro);
-}
-.display {
-  font-family: var(--f-display);
-  font-weight: 800;
-  font-stretch: var(--stretch-medio);
-  line-height: 0.9;
-  text-transform: uppercase;
+.titulo {
+  font: 800 var(--t-3xl) / 1.02 var(--f-sans);
+  font-stretch: var(--ancho-titulo);
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
-.lead {
-  max-width: 38ch;
-  font-size: var(--t-l);
-  line-height: 1.55;
-  color: var(--texto-secundario);
+.titulo-xl {
+  font: 800 var(--t-4xl) / 0.98 var(--f-sans);
+  font-stretch: var(--ancho-titulo);
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
+.subtitulo {
+  font: 700 var(--t-xl) / 1.2 var(--f-sans);
+  font-stretch: 106%;
+  letter-spacing: -0.01em;
+}
+.lead {
+  max-width: 44ch;
+  font-size: var(--t-l);
+  line-height: 1.5;
+  color: var(--sobre-oscuro-2);
+  text-wrap: pretty;
+}
+.claro .lead { color: var(--tinta-2); }
+.dato {
+  font: 600 var(--t-s) / 1.3 var(--f-sans);
+  color: var(--sobre-oscuro-2);
+}
+.claro .dato { color: var(--tinta-2); }
 
 /* Botones */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--s-1);
-  min-height: 3.25rem;
-  padding: 0 var(--s-4);
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1.5rem;
+  border: 0;
   border-radius: var(--radio-boton);
-  background: var(--rgb);
-  color: var(--noche);
-  font: 700 var(--t-m) / 1 var(--f-body);
+  background: var(--acento);
+  color: var(--sobre-acento);
+  font: 700 var(--t-m) / 1 var(--f-sans);
   text-decoration: none;
   white-space: nowrap;
-  transition: transform var(--dur-micro) var(--ease-ui), box-shadow var(--dur-micro) var(--ease-ui);
+  cursor: pointer;
+  transition: background-color var(--dur-micro) var(--ease-ui), transform var(--dur-micro) var(--ease-ui);
 }
-.btn:hover { transform: translateY(-2px); box-shadow: var(--glow); }
+.btn:hover { background: var(--acento-hover); }
+.btn:active { transform: scale(0.97); }
 .btn-ghost {
   background: transparent;
-  color: var(--texto);
-  box-shadow: inset 0 0 0 1px var(--linea);
+  color: inherit;
+  box-shadow: inset 0 0 0 1.5px currentColor;
 }
-.btn-ghost:hover { box-shadow: inset 0 0 0 1px var(--acento-activo), 0 0 24px -8px var(--acento-activo); }
+.btn-ghost:hover { background: rgb(127 127 127 / 0.12); }
+.claro .btn:not(.btn-ghost) { background: var(--tinta); color: var(--blanco); }
+.claro .btn:not(.btn-ghost):hover { background: var(--tinta-hover); }
 
-/* Texto relleno con el degradado RGB */
-.rgb-texto {
-  background: var(--rgb);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* Enlace con flecha */
+.enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  color: var(--acento);
+  text-decoration: none;
+}
+.claro .enlace { color: var(--acento-texto); }
+.enlace:hover { text-decoration: underline; }
+.enlace svg { width: 1em; height: 1em; transition: transform var(--dur-micro) var(--ease-ui); }
+.enlace:hover svg { transform: translateX(3px); }
+
+.icono { width: 1.5rem; height: 1.5rem; flex: none; }
+
+/* Estado en vivo: punto + texto. El punto late solo si está abierto */
+.estado { display: inline-flex; align-items: center; gap: 0.5rem; }
+.estado::before {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--cerrado);
+}
+.estado[data-abierto]::before { background: var(--abierto); box-shadow: 0 0 0 0 var(--abierto); animation: latido 2s infinite; }
+.claro .estado[data-abierto]::before { background: var(--acento-texto); }
+@keyframes latido {
+  0% { box-shadow: 0 0 0 0 rgb(47 216 236 / 0.6); }
+  70% { box-shadow: 0 0 0 8px rgb(47 216 236 / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(47 216 236 / 0); }
 }
 
 /* Datos por confirmar: visibles solo en modo revisión */
 .revision .pendiente {
-  text-decoration: underline dashed var(--texto-secundario);
+  text-decoration: underline dashed currentColor;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
 }
 
 /* Estados iniciales de reveal: solo existen si hay JS y movimiento */
-.motion [data-reveal] { opacity: 0; transform: translateY(40px); }
+.motion [data-reveal] { opacity: 0; transform: translateY(24px); }
 
 .visually-hidden {
   position: absolute;
@@ -93,4 +152,8 @@ ul, ol { padding: 0; list-style: none; }
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .estado[data-abierto]::before { animation: none; }
 }

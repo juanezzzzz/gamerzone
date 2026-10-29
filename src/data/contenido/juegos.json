@@ -1,0 +1,66 @@
+{
+  "titulo": "¿Tienen mi juego?",
+  "juegos": [
+    {
+      "nombre": "EA Sports FC 27",
+      "genero": "Fútbol",
+      "en": [
+        "xbox",
+        "pc"
+      ]
+    },
+    {
+      "nombre": "EA Sports FC 26",
+      "genero": "Fútbol",
+      "en": [
+        "xbox",
+        "pc"
+      ]
+    },
+    {
+      "nombre": "Call of Duty",
+      "genero": "Shooter",
+      "en": [
+        "xbox",
+        "pc"
+      ]
+    },
+    {
+      "nombre": "Valorant",
+      "genero": "Táctico",
+      "en": [
+        "pc"
+      ]
+    },
+    {
+      "nombre": "League of Legends",
+      "genero": "MOBA",
+      "en": [
+        "pc"
+      ]
+    },
+    {
+      "nombre": "Fortnite",
+      "genero": "Battle royale",
+      "en": [
+        "xbox",
+        "pc"
+      ]
+    },
+    {
+      "nombre": "Fall Guys",
+      "genero": "Party",
+      "en": [
+        "xbox",
+        "pc"
+      ]
+    },
+    {
+      "nombre": "World of Warcraft",
+      "genero": "MMO",
+      "en": [
+        "pc"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "titulo": "Tres generaciones de Xbox.",
+  "texto": "De los clásicos de sofá de la 360 a la Series S. Hasta cuatro controles por consola.",
+  "consolas": [
+    {
+      "nombre": "Xbox 360",
+      "anio": "2005",
+      "imagen": "xbox-360.webp",
+      "texto": "Los clásicos de sofá, pantalla dividida y cuatro controles.",
+      "ficha": [
+        "Hasta 4 controles",
+        "Multijugador local"
+      ]
+    },
+    {
+      "nombre": "Xbox One",
+      "anio": "2013",
+      "imagen": "xbox-one.webp",
+      "texto": "Catálogo grande para jugar en grupo y en línea.",
+      "ficha": [
+        "Juego en línea",
+        "Catálogo amplio"
+      ]
+    },
+    {
+      "nombre": "Xbox Series S",
+      "anio": "2020",
+      "imagen": "xbox-series-s.webp",
+      "texto": "La generación actual: carga en segundos y hasta 120 fps.",
+      "ficha": [
+        "Hasta 120 fps",
+        "Carga rápida"
+      ]
+    }
+  ]
+}

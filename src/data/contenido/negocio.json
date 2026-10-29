@@ -1,0 +1,16 @@
+{
+  "revision": true,
+  "ciudad": {
+    "texto": "Colombia",
+    "pendiente": true
+  },
+  "whatsapp": {
+    "numero": "570000000000",
+    "visible": "300 000 0000",
+    "pendiente": true
+  },
+  "instagram": {
+    "texto": "@zonagamer",
+    "pendiente": true
+  }
+}

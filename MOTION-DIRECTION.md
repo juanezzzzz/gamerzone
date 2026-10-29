@@ -7,18 +7,18 @@ Un solo momento orquestado por escena. El movimiento cuenta el recorrido físico
 | Nivel | Qué | Herramienta | Duración |
 |---|---|---|---|
 | Micro | Hover, focus, botones, accordion | CSS | 200–300 ms |
-| Reveal | `[data-reveal]` entra con opacity 0 → 1 y y 40 → 0 | GSAP | 0.7 s `power2.out`, stagger 0.1 |
+| Reveal | `[data-reveal]` entra con opacity 0 → 1 y y 24 → 0 | GSAP | 0.9 s `expo.out`, stagger 0.08 |
 | Secuencia | Hero, PCs, consolas, VIP, planes | ScrollTrigger pinned + scrub | Según scroll |
-| Transición | Cambio de acento cian → dorado al entrar a la VIP | GSAP sobre custom properties | 0.9 s |
 | Ambiente | Marquesina de juegos | GSAP ticker, velocidad × scroll | Continuo |
 
 ## Momentos firmados
-1. **Hero**: video `clip-path: inset(18% 22% 18% 22%)` → `inset(0)`; título `font-stretch` 50 % → máximo que quepa.
-2. **Statement**: cada palabra pasa de 50 % a 100 % de ancho al cruzar el centro.
-3. **VIP**: imagen crece de ventana central a full bleed; indicador de piso rueda de 1 a 2.
+1. **Hero**: la tarjeta de video (con el ancho del contenedor y bordes redondeados) se abre a sangre mientras sube.
+2. **PCs**: la media queda fija y cambia con la spec que cruza el centro de la pantalla.
+3. **Consolas**: recorrido horizontal pinned; cada foto se descubre con clip-path.
+4. **VIP**: la sala crece desde una ventana central y el contenido sube.
 
 ## Easing
-- Reveal: `power2.out`
+- Reveal: `expo.out`
 - UI: `cubic-bezier(.16, 1, .3, 1)`
 - Marquesina y scrub: `none`
 

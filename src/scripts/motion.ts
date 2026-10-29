@@ -1,10 +1,9 @@
 // Coreografía del scroll. Ver MOTION-DIRECTION.md.
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { SplitText } from 'gsap/SplitText'
 import Lenis from 'lenis'
 
-gsap.registerPlugin(ScrollTrigger, SplitText)
+gsap.registerPlugin(ScrollTrigger)
 
 const $ = <T extends Element = HTMLElement>(s: string, el: ParentNode = document) => el.querySelector<T>(s)
 const $$ = <T extends Element = HTMLElement>(s: string, el: ParentNode = document) => [...el.querySelectorAll<T>(s)]
@@ -14,6 +13,7 @@ const desktop = '(min-width: 64.0625rem)'
 
 /* ---------- Videos: solo se reproducen en pantalla ---------- */
 
+// Los videos de las specs de PC los maneja su sección: solo suenan cuando su capa está activa
 const io = new IntersectionObserver(
   (entries) =>
     entries.forEach((e) => {
@@ -23,60 +23,7 @@ const io = new IntersectionObserver(
     }),
   { rootMargin: '15% 0px' }
 )
-$$<HTMLVideoElement>('video').forEach((v) => io.observe(v))
-
-/* ---------- Ancho tipográfico que cabe ---------- */
-
-// El font-stretch más ancho (hasta max) con el que el texto cabe en `room` px.
-function fitStretch(el: HTMLElement, room: number, max = 150) {
-  const prev = el.style.fontStretch
-  let lo = 50
-  let hi = max
-  for (let i = 0; i < 8; i++) {
-    const mid = (lo + hi) / 2
-    el.style.fontStretch = `${mid}%`
-    if (el.scrollWidth <= room) lo = mid
-    else hi = mid
-  }
-  el.style.fontStretch = prev
-  return lo
-}
-
-/* ---------- Modo VIP: el acento pasa a dorado solo dentro de la sala ---------- */
-
-function modoVip(on: boolean) {
-  const css = getComputedStyle(root)
-  gsap.to(root, {
-    '--acento-activo': css.getPropertyValue(on ? '--vip' : '--acento').trim(),
-    '--acento-2-activo': css.getPropertyValue(on ? '--vip-2' : '--acento-2').trim(),
-    '--fondo-activo': css.getPropertyValue(on ? '--vip-noche' : '--noche').trim(),
-    duration: reduced ? 0 : 0.9,
-    ease: 'power2.out',
-  })
-}
-
-/* ---------- PCs: la spec elegida muestra su media ---------- */
-
-function activarSpec(clave: string) {
-  $$('[data-spec]').forEach((s) => {
-    const activa = s.dataset.spec === clave
-    s.toggleAttribute('data-activa', activa)
-    s.setAttribute('aria-pressed', String(activa))
-  })
-  $$('[data-capa]').forEach((c) => {
-    const activa = c.dataset.capa === clave
-    c.toggleAttribute('data-activa', activa)
-    const v = $<HTMLVideoElement>('video', c)
-    if (v && activa && !reduced) v.play().catch(() => {})
-    else if (v) v.pause()
-  })
-}
-$$('[data-spec]').forEach((spec) => {
-  const elegir = () => activarSpec(spec.dataset.spec!)
-  spec.addEventListener('mouseenter', elegir)
-  spec.addEventListener('focus', elegir)
-  spec.addEventListener('click', elegir)
-})
+$$<HTMLVideoElement>('video').filter((v) => !v.closest('[data-capa]')).forEach((v) => io.observe(v))
 
 /* ---------- Eje de consolas: ubica los hitos y mueve el marcador ---------- */
 
@@ -115,33 +62,30 @@ pistaConsolas?.addEventListener(
   { passive: true }
 )
 
-/* ---------- El lugar: número y regla del termómetro ---------- */
-
-const tempEl = $('[data-temp]')
-const grados = $$('[data-grado]')
-function setTemp(v: number) {
-  if (tempEl && tempEl.textContent !== String(v)) tempEl.textContent = String(v)
-  grados.forEach((g) => g.toggleAttribute('data-activo', Number(g.dataset.grado) === v))
-}
-setTemp(31)
-
-/* ---------- Triggers de lectura (nav, VIP, CTA móvil) ---------- */
+/* ---------- Triggers de lectura (nav, CTA móvil) ---------- */
 
 function triggersDeLectura() {
   const nav = $('[data-nav]')
   ScrollTrigger.create({
     start: () => window.innerHeight * 0.8,
-    end: 'max',
+    // Más allá del final: con 'max' la barra se apagaba justo al tocar el fondo de la página
+    end: () => document.documentElement.scrollHeight * 2,
     onToggle: (self) => nav?.classList.toggle('solida', self.isActive),
   })
 
-  ScrollTrigger.create({
-    trigger: '[data-vip]',
-    // Cambia cuando la sala ya ocupa la pantalla, no cuando apenas asoma
-    start: 'top 10%',
-    end: 'bottom 45%',
-    onToggle: (self) => modoVip(self.isActive),
-  })
+  // La barra toma la superficie que tiene justo debajo de su borde inferior:
+  // clara sobre las secciones de información, oscura sobre el resto
+  const superficie = () => {
+    if (!nav) return
+    const y = nav.offsetHeight + 1
+    const debajo = document.elementsFromPoint(window.innerWidth / 2, y).find((el) => !nav.contains(el))
+    // Una tarjeta o foto oscura dentro de una sección clara cuenta como oscura
+    const zona = debajo?.closest('[data-superficie="oscura"], .claro')
+    nav.classList.toggle('sobre-claro', !!zona?.classList.contains('claro'))
+  }
+  window.addEventListener('scroll', superficie, { passive: true })
+  ScrollTrigger.addEventListener('refresh', superficie)
+  superficie()
 
   // CTA móvil: se esconde donde ya hay botón
   const mobileCta = $('[data-mobile-cta]')
@@ -184,49 +128,45 @@ if (!reduced) {
       if (!destino) return
       e.preventDefault()
       // Posición real en el documento: incluye el espacio que agregan los pins
-      const y = destino.getBoundingClientRect().top + window.scrollY - 8
-      lenis.scrollTo(y, { duration: 1.4 })
+      const y = destino.getBoundingClientRect().top + window.scrollY
+      lenis.scrollTo(y, { duration: 1.2 })
     })
   )
 
-  // Reveal global
+  // Reveal global: sube 24 px y aparece, en cascada por grupo
   ScrollTrigger.batch('[data-reveal]', {
     start: 'top 88%',
     once: true,
-    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', stagger: 0.1 }),
+    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 0.9, ease: 'expo.out', stagger: 0.08 }),
   })
 
   const mm = gsap.matchMedia()
 
-  // Hero: la ventana se abre a pantalla completa y la marca se ensancha
-  const marca = $('[data-hero-marca]')!
-  const lineaLarga = marca.lastElementChild as HTMLElement
+  // Hero: entrada al aparecer (la apertura va antes)
   gsap
-    .timeline({
-      scrollTrigger: {
-        trigger: '[data-hero]',
-        start: 'top top',
-        end: '+=80%',
-        pin: '[data-hero-escena]',
-        scrub: 0.6,
-        invalidateOnRefresh: true,
-      },
-    })
-    .to('[data-hero-ventana]', { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', duration: 1 }, 0)
-    .to(marca, { fontStretch: () => `${fitStretch(lineaLarga, marca.clientWidth)}%`, ease: 'power1.inOut', duration: 0.8 }, 0)
-    .to('[data-hero-pie]', { opacity: 0, y: -30, duration: 0.3 }, 0)
-    .to(marca, { yPercent: -18, opacity: 0.0, duration: 0.3, ease: 'power2.in' }, 0.7)
+    .timeline({ defaults: { ease: 'expo.out' }, scrollTrigger: { trigger: '[data-hero]', start: 'top 75%', once: true } })
+    .from('[data-hero-titulo]', { opacity: 0, y: 32, duration: 1.2 })
+    .from('[data-hero-pieza]', { opacity: 0, y: 20, duration: 1, stagger: 0.08 }, 0.15)
+    .from('[data-hero-media] video', { opacity: 0, scale: 1.08, duration: 1.6 }, 0.25)
 
-  // Entrada del hero al aparecer (la apertura va antes): anima los hijos,
-  // no los mismos elementos que mueve el scroll
-  gsap
-    .timeline({ defaults: { ease: 'expo.out' }, scrollTrigger: { trigger: '[data-hero]', start: 'top 70%', once: true } })
-    .from('[data-hero-ventana] video', { scale: 1.25, opacity: 0, duration: 2.2, ease: 'power2.out' })
-    .from('[data-hero-marca] span', { yPercent: 60, opacity: 0, duration: 1.4, stagger: 0.12 }, 0.3)
-    .from('[data-hero] .label', { opacity: 0, y: 16, duration: 1 }, 0.6)
-    .from('[data-hero-pie] > *', { opacity: 0, y: 24, duration: 1, stagger: 0.08 }, 0.9)
+  // Hero: la tarjeta de video se abre a pantalla completa mientras sube
+  gsap.to('[data-hero-media]', {
+    clipPath: 'inset(0px 0px round 0px)',
+    ease: 'none',
+    scrollTrigger: { trigger: '[data-hero-media]', start: 'top 85%', end: 'top top', scrub: 0.6 },
+  })
 
-  // Consolas: recorrido horizontal en desktop; la foto se descubre y el año se abre
+  // Precios: las tarifas entran en cascada con algo más de recorrido
+  gsap.from('.tarifa', {
+    y: 48,
+    opacity: 0,
+    duration: 1,
+    ease: 'expo.out',
+    stagger: 0.1,
+    scrollTrigger: { trigger: '.tarifas', start: 'top 85%', once: true },
+  })
+
+  // Consolas: recorrido horizontal en desktop; cada foto se descubre al entrar
   mm.add(desktop, () => {
     const pista = $('[data-consolas-pista]')!
     const dist = () => pista.scrollWidth - window.innerWidth
@@ -244,15 +184,14 @@ if (!reduced) {
       },
     })
     $$('[data-panel]', pista).forEach((panel) => {
-      const entra = { trigger: panel, containerAnimation: mover, start: 'left right', end: 'left 30%', scrub: true }
-      gsap.fromTo($('[data-panel-foto]', panel), { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: entra })
-      gsap.fromTo($('[data-panel-foto] img', panel), { scale: 1.25 }, { scale: 1, ease: 'none', scrollTrigger: entra })
-      gsap.fromTo($('.anio', panel), { fontStretch: '50%' }, { fontStretch: '85%', ease: 'none', scrollTrigger: { ...entra, end: 'right left' } })
+      const entra = { trigger: panel, containerAnimation: mover, start: 'left 95%', end: 'left 45%', scrub: true }
+      gsap.fromTo($('[data-panel-foto]', panel), { clipPath: 'inset(0% 0% 0% 100% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 28px)', ease: 'none', scrollTrigger: entra })
+      gsap.fromTo($('[data-panel-foto] img', panel), { scale: 1.2 }, { scale: 1, ease: 'none', scrollTrigger: entra })
+      gsap.fromTo($('[data-panel-info]', panel), { opacity: 0, x: 40 }, { opacity: 1, x: 0, ease: 'none', scrollTrigger: entra })
     })
   })
 
-  // VIP: la sala crece desde una ventana central y el título se abre
-  const vipTitulo = $('[data-vip-titulo]')!
+  // VIP: la sala crece desde una ventana central y el contenido sube
   gsap
     .timeline({
       scrollTrigger: {
@@ -266,7 +205,9 @@ if (!reduced) {
     })
     .to('[data-vip-ventana]', { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', duration: 1 }, 0)
     .to('[data-vip-ventana] img', { scale: 1, ease: 'none', duration: 1 }, 0)
-    .to(vipTitulo, { fontStretch: () => `${fitStretch(vipTitulo, window.innerWidth * 0.9, 130)}%`, ease: 'power2.out', duration: 0.7 }, 0)
+    // El botón y la nota solo aparecen: si también subieran, la cascada los cruzaría
+    .from('[data-vip-contenido] > :not(.btn):not(.nota)', { opacity: 0, y: 30, stagger: 0.06, duration: 0.5, ease: 'power2.out' }, 0.15)
+    .from('[data-vip-contenido] > :is(.btn, .nota)', { opacity: 0, duration: 0.4, ease: 'power2.out' }, 0.45)
 
   // Juegos: marquesina continua; el scroll la acelera y cambia su dirección
   const filas = $$('[data-fila]')
@@ -294,54 +235,12 @@ if (!reduced) {
     })
   }
 
-  // El lugar: la escalera se abre desde una rendija y el termómetro baja a 22 °C
-  const t = { v: 31 }
-  const bajarTemp = (tl: gsap.core.Timeline) =>
-    tl
-      .to('[data-lugar-media]', { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.inOut', duration: 1 }, 0)
-      .to(t, { v: 22, ease: 'none', duration: 0.9, onUpdate: () => setTemp(Math.round(t.v)) }, 0.1)
-  mm.add('(min-width: 48rem)', () => {
-    bajarTemp(gsap.timeline({ scrollTrigger: { trigger: '[data-lugar]', start: 'top top', end: '+=60%', pin: '[data-lugar-escena]', scrub: 0.6 } }))
+  // CTA final: la tarjeta crece un poco al entrar
+  gsap.from('[data-cta-tarjeta]', {
+    scale: 0.92,
+    ease: 'none',
+    scrollTrigger: { trigger: '[data-cta]', start: 'top bottom', end: 'center center', scrub: 0.6 },
   })
-  mm.add('(max-width: 47.99rem)', () => {
-    bajarTemp(gsap.timeline({ scrollTrigger: { trigger: '[data-lugar]', start: 'top 70%', end: 'center 40%', scrub: 0.6 } }))
-  })
-
-  // Statement: cada palabra se ensancha y se enciende al pasar
-  const frase = $('[data-statement]')
-  if (frase) {
-    const split = SplitText.create(frase, { type: 'words', wordsClass: 'palabra' })
-    const palabras = split.words as HTMLElement[]
-    // Reserva el alto final (palabras ya ensanchadas) para que la página no crezca al animar
-    const reservarAlto = () => {
-      const previo = palabras.map((p) => p.style.fontStretch)
-      frase.style.minHeight = ''
-      palabras.forEach((p) => (p.style.fontStretch = '100%'))
-      frase.style.minHeight = `${frase.offsetHeight}px`
-      palabras.forEach((p, i) => (p.style.fontStretch = previo[i]))
-    }
-    reservarAlto()
-    ScrollTrigger.addEventListener('refreshInit', reservarAlto)
-    gsap.to(palabras, {
-      fontStretch: '100%',
-      opacity: 1,
-      ease: 'none',
-      stagger: 0.1,
-      scrollTrigger: { trigger: frase, start: 'top 80%', end: 'bottom 45%', scrub: 0.5 },
-    })
-  }
-
-  // CTA final: la pregunta se abre hasta llenar el ancho
-  const pregunta = $('[data-cta-titulo]')!
-  gsap.fromTo(
-    pregunta,
-    { fontStretch: '50%' },
-    {
-      fontStretch: () => `${fitStretch(pregunta, pregunta.clientWidth)}%`,
-      ease: 'none',
-      scrollTrigger: { trigger: '[data-cta]', start: 'top 80%', end: 'center center', scrub: 0.5, invalidateOnRefresh: true },
-    }
-  )
 
   triggersDeLectura()
   refrescar()
@@ -350,5 +249,4 @@ if (!reduced) {
   document.fonts.ready.then(refrescar)
 } else {
   triggersDeLectura()
-  setTemp(22)
 }

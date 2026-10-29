@@ -1,0 +1,58 @@
+{
+  "titulo": "Precios claros.",
+  "texto": "Pagas por el tiempo que jugaste, al terminar. Sin membresías ni letra pequeña.",
+  "nota": "Precios en pesos colombianos, por puesto. Efectivo, transferencia, Nequi o tarjeta.",
+  "pc": {
+    "hora": 4000,
+    "mediaHora": 2500,
+    "transnochon": 20000,
+    "pendiente": true
+  },
+  "consola": {
+    "hora": 5000,
+    "controlAdicional": 1000,
+    "pendiente": true
+  },
+  "planesTitulo": "Planes para cuando una hora no alcanza",
+  "planes": [
+    {
+      "nombre": "Pase de 5 horas",
+      "texto": "Cinco horas de PC para usar el mismo día, como quieras repartirlas.",
+      "incluye": [
+        "Cualquier PC disponible",
+        "Válido el mismo día"
+      ],
+      "duracion": "5 h",
+      "personas": "1",
+      "precio": 16000,
+      "horasPc": 5,
+      "pendiente": true
+    },
+    {
+      "nombre": "Noche de torneo",
+      "texto": "Arma tu equipo y reserva una fila de PCs para jugar contra tus amigos.",
+      "incluye": [
+        "Fila de 5 PCs",
+        "Bracket armado por nosotros"
+      ],
+      "duracion": "3 h",
+      "personas": "5",
+      "precio": 60000,
+      "horasPc": 0,
+      "pendiente": true
+    },
+    {
+      "nombre": "Cumpleaños",
+      "texto": "La sala VIP para tu grupo, con consola, pantalla grande y tiempo de sobra.",
+      "incluye": [
+        "Sala VIP privada",
+        "Decoración básica"
+      ],
+      "duracion": "3 h",
+      "personas": "Hasta 6 personas",
+      "precio": 80000,
+      "horasPc": 0,
+      "pendiente": true
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+---
+import { TARIFAS, PLANES, PRECIO_HORA_PC, TEXTOS, pesos, waLink } from '../data/local'
+import Icono from './Icono.astro'
+// Si el plan equivale a horas de PC, se muestra cuánto se ahorra frente a pagar por hora
+const ahorro = (p: (typeof PLANES)[number]) =>
+  'horasPc' in p && p.horasPc ? p.horasPc * PRECIO_HORA_PC.valor - p.valor : 0
+const iconos = ['monitor', 'control', 'grupo'] as const
+---
+
+<section class="precios claro" id="precios">
+  <div class="contenedor">
+    <header class="cabeza" data-reveal>
+      <h2 class="titulo">{TEXTOS.precios.titulo}</h2>
+      <p class="lead">{TEXTOS.precios.texto}</p>
+    </header>
+
+    <!-- Tarifas: el precio principal de cada grupo en grande, el resto debajo -->
+    <ul class="tarifas">
+      {
+        TARIFAS.map((g, i) => {
+          const [principal, ...resto] = g.filas
+          return (
+            <li class:list={['tarifa', { vip: g.vip }]} data-superficie={g.vip ? 'oscura' : undefined}>
+              <h3 class="nombre">
+                <Icono nombre={iconos[i]} />
+                {g.grupo}
+              </h3>
+              <p class="principal">
+                <span class:list={['monto', { pendiente: principal.pendiente }]}>{principal.precio}</span>
+                <span class="unidad">{principal.nombre.toLowerCase()}</span>
+              </p>
+              {resto.length > 0 && (
+                <dl class="resto">
+                  {resto.map((f) => (
+                    <div>
+                      <dt>{f.nombre}</dt>
+                      <dd class:list={{ pendiente: f.pendiente }}>{f.precio}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              {g.vip && (
+                <a class="enlace" href="#vip">
+                  Conocer la sala <Icono nombre="flecha" />
+                </a>
+              )}
+            </li>
+          )
+        })
+      }
+    </ul>
+    <p class="nota dato">{TEXTOS.precios.nota}</p>
+
+    <!-- Planes: filas comparables, con el ahorro a la vista -->
+    <div class="planes">
+      <h3 class="subtitulo" data-reveal>{TEXTOS.precios.planes}</h3>
+      <ol class="lista-planes">
+        {
+          PLANES.map((p) => (
+            <li class="plan" data-reveal>
+              <div class="plan-info">
+                <h4 class="plan-nombre">{p.nombre}</h4>
+                <p class="plan-texto">{p.texto}</p>
+              </div>
+              <ul class="incluye">
+                {p.incluye.map((x) => (
+                  <li>
+                    <Icono nombre="check" />
+                    {x}
+                  </li>
+                ))}
+              </ul>
+              <dl class="plan-datos">
+                <div>
+                  <dt>Duración</dt>
+                  <dd class:list={{ pendiente: p.pendiente }}>{p.duracion}</dd>
+                </div>
+                <div>
+                  <dt>Personas</dt>
+                  <dd class:list={{ pendiente: p.pendiente }}>{p.personas}</dd>
+                </div>
+              </dl>
+              <div class="plan-cierre">
+                <p class:list={['plan-precio', { pendiente: p.pendiente }]}>{p.precio}</p>
+                {ahorro(p) > 0 && <p class="ahorro">Ahorras {pesos(ahorro(p))}</p>}
+                <a class="btn btn-ghost" href={waLink(`Hola, me interesa el plan "${p.nombre}".`)} target="_blank" rel="noopener">
+                  Reservar este plan
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .precios { padding-block: var(--s-seccion); }
+  .cabeza { display: grid; gap: var(--s-2); margin-bottom: var(--s-5); }
+
+  .tarifas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-2);
+  }
+  .tarifa {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding: var(--s-4);
+    border-radius: var(--radio-l);
+    background: var(--blanco);
+    box-shadow: var(--sombra-tarjeta);
+  }
+  .nombre {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font: 700 var(--t-l) / 1.2 var(--f-sans);
+  }
+  .principal { display: grid; gap: 0.15rem; }
+  .monto {
+    font: 800 var(--t-precio) / 1 var(--f-sans);
+    font-stretch: var(--ancho-titulo);
+    letter-spacing: -0.03em;
+  }
+  .unidad { font-weight: 500; color: var(--tinta-2); }
+  .resto { display: grid; border-top: 1px solid var(--linea-clara); }
+  .resto div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--s-2);
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--linea-clara);
+  }
+  .resto dt { color: var(--tinta-2); }
+  .resto dd { font-weight: 700; }
+
+  /* La sala VIP es la única tarifa oscura y la única con dorado */
+  .tarifa.vip { background: var(--vip-noche); color: var(--sobre-oscuro); }
+  .tarifa.vip .nombre :global(.icono) { color: var(--vip); }
+  .tarifa.vip .monto { color: var(--vip); }
+  .tarifa.vip .unidad { color: var(--sobre-oscuro-2); }
+  .tarifa.vip .enlace { margin-top: auto; color: var(--vip); }
+
+  .nota { margin-top: var(--s-3); }
+
+  .planes { margin-top: var(--s-6); }
+  .lista-planes { margin-top: var(--s-3); border-top: 1px solid var(--linea-clara); }
+  .plan {
+    display: grid;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
+    gap: var(--s-4);
+    align-items: center;
+    padding-block: var(--s-4);
+    border-bottom: 1px solid var(--linea-clara);
+  }
+  .plan-nombre { font: 800 var(--t-xl) / 1.15 var(--f-sans); font-stretch: 106%; letter-spacing: -0.01em; }
+  .plan-texto { margin-top: 0.35rem; color: var(--tinta-2); max-width: 40ch; }
+  .incluye { display: grid; gap: 0.4rem; font-size: var(--t-s); }
+  .incluye li { display: flex; align-items: center; gap: 0.5rem; }
+  .incluye :global(.icono) { width: 1.1rem; height: 1.1rem; color: var(--acento-texto); }
+  .plan-datos { display: grid; gap: 0.4rem; font-size: var(--t-s); }
+  .plan-datos div { display: flex; gap: 0.5rem; }
+  .plan-datos dt { color: var(--tinta-2); }
+  .plan-datos dd { font-weight: 700; }
+  .plan-cierre { display: grid; justify-items: end; gap: 0.5rem; text-align: right; }
+  .plan-precio { font: 800 var(--t-2xl) / 1 var(--f-sans); font-stretch: var(--ancho-titulo); letter-spacing: -0.02em; }
+  .ahorro { font: 700 var(--t-xs) / 1 var(--f-sans); color: var(--acento-texto); }
+  .plan-cierre .btn { margin-top: 0.25rem; min-height: 2.5rem; font-size: var(--t-s); }
+
+  @media (max-width: 64rem) {
+    .plan { grid-template-columns: minmax(0, 1fr) auto; }
+    .incluye, .plan-datos { grid-column: 1; }
+    .plan-cierre { grid-column: 2; grid-row: 1 / span 3; align-self: start; }
+  }
+  @media (max-width: 47.99rem) {
+    .tarifas { grid-template-columns: 1fr; }
+    .tarifa { padding: var(--s-3); }
+    .plan { grid-template-columns: 1fr; gap: var(--s-2); }
+    .plan-cierre { grid-column: 1; grid-row: auto; justify-items: start; text-align: left; grid-template-columns: auto auto; align-items: baseline; gap: 0.25rem var(--s-2); }
+    .plan-cierre .btn { grid-column: 1 / -1; width: 100%; }
+    .plan-datos { display: flex; gap: var(--s-3); }
+  }
+</style>

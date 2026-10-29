@@ -1,48 +1,54 @@
-/* Sistema de diseño. Cualquier color, tamaño o espacio del sitio sale de aquí. */
+/* Sistema de diseño. Cualquier color, tamaño o espacio del sitio sale de aquí.
+   Dos superficies que se alternan: oscura para la experiencia (hero, equipos, VIP, cierre)
+   y clara para la información (precios, sedes, comodidades, preguntas). Un solo acento:
+   el cian del logo, solo para acciones, estado en vivo y cifras clave. */
 :root {
-  /* Color: 70 % superficies, 20 % foto, 10 % acento. Acento RGB: cian eléctrico + magenta */
-  --noche: #05060d;
-  --superficie: #0b0d18;
-  --superficie-2: #111426;
-  --superficie-3: #191d36;
-  --acento: #2fe0ff;
-  --acento-2: #ff2fa6;
-  --acento-claro: #5ccfea;
-  --texto: #eef6ff;
-  --texto-secundario: #8e96b5;
-  --linea: #1e2340;
-  --vip: #e8c27e;
-  --vip-2: #ffe3a8;
-  --vip-noche: #0d0906;
-  /* Los acentos activos cambian a dorado solo mientras se está en la sala VIP */
-  --acento-activo: var(--acento);
-  --acento-2-activo: var(--acento-2);
-  --fondo-activo: var(--noche);
-  --rgb: linear-gradient(100deg, var(--acento-activo), var(--acento-2-activo));
-  /* Luz: glows para acentos y halos de ambiente */
-  --glow: 0 0 24px -4px var(--acento-activo), 0 0 48px -12px var(--acento-2-activo);
-  --halo-cian: rgb(47 224 255 / 0.14);
-  --halo-magenta: rgb(255 47 166 / 0.12);
+  /* Oscuro */
+  --grafito: #0b0d10;
+  --grafito-2: #14171c;
+  --grafito-3: #1d2128;
+  --sobre-oscuro: #f4f6f8;
+  --sobre-oscuro-2: #a3acb7;
+  --linea-oscura: #262b33;
 
-  /* Tipografía */
-  --f-display: 'Anybody', 'Arial Narrow', sans-serif;
-  --f-body: 'Instrument Sans', 'Segoe UI', system-ui, sans-serif;
-  --f-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+  /* Claro */
+  --nube: #f4f5f7;
+  --blanco: #ffffff;
+  --tinta: #0b0d10;
+  --tinta-2: #535c68;
+  --linea-clara: #e1e4e9;
+  --tinta-hover: #262b33;
 
-  --t-xs: 0.75rem;
-  --t-s: 0.875rem;
-  --t-m: 1rem;
-  --t-l: 1.125rem;
-  --t-xl: 1.3125rem;
-  --t-2xl: 1.5rem;
-  --t-3xl: 2.25rem;
-  --t-4xl: 3rem;
-  --t-5xl: clamp(3rem, 6vw, 4.5rem);
-  --t-display: clamp(2.75rem, 7vw, 7rem);
-  --t-mega: clamp(4.5rem, 17vw, 17rem);
+  /* Acento: cian del logo. --acento-texto es la versión que cumple contraste sobre claro */
+  --acento: #2fd8ec;
+  --acento-hover: #6ae6f4;
+  --acento-texto: #00788a;
+  --sobre-acento: #04161a;
+  --abierto: #2fd8ec;
+  --cerrado: #ff8a7a;
+  /* Errores de formulario, sobre claro */
+  --error: #c0392b;
+  --error-fondo: #fdf1ef;
 
-  --stretch-condensado: 50%;
-  --stretch-medio: 72%;
+  /* Dorado: solo dentro de la sala VIP y en su precio */
+  --vip: #e2bd73;
+  --vip-hover: #ecd09a;
+  --vip-noche: #0f0c08;
+
+  /* Tipografía: una sola familia variable. El ancho expandido es la voz de los títulos */
+  --f-sans: 'Archivo', 'Segoe UI', system-ui, sans-serif;
+  --ancho-titulo: 112%;
+  --ancho-texto: 100%;
+
+  --t-xs: 0.8125rem;
+  --t-s: 0.9375rem;
+  --t-m: 1.0625rem;
+  --t-l: 1.25rem;
+  --t-xl: 1.5rem;
+  --t-2xl: clamp(1.75rem, 2.4vw, 2.25rem);
+  --t-3xl: clamp(2.25rem, 4.4vw, 3.75rem);
+  --t-4xl: clamp(2.75rem, 6.4vw, 5.5rem);
+  --t-precio: clamp(2.5rem, 4vw, 3.5rem);
 
   /* Espacio */
   --s-1: 0.5rem;
@@ -51,13 +57,19 @@
   --s-4: 2rem;
   --s-5: 3rem;
   --s-6: 4.5rem;
-  --s-seccion: clamp(6rem, 12vw, 11rem);
-  --gutter: clamp(1rem, 4vw, 3.5rem);
-  --nav-h: 4rem;
+  --s-seccion: clamp(5.5rem, 11vw, 10rem);
+  --gutter: clamp(1rem, 4vw, 3rem);
+  --ancho-max: 76rem;
+  --nav-h: 3.75rem;
 
-  /* Forma y movimiento */
-  --radio-media: 4px;
+  /* Forma */
+  --radio-s: 0.75rem;
+  --radio-m: 1.25rem;
+  --radio-l: 1.75rem;
   --radio-boton: 999px;
+  --sombra-tarjeta: 0 1px 2px rgb(11 13 16 / 0.04), 0 8px 24px -12px rgb(11 13 16 / 0.12);
+
+  /* Movimiento */
   --ease-ui: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-micro: 250ms;
 

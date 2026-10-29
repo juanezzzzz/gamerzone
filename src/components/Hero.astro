@@ -1,156 +1,96 @@
 ---
-import { NEGOCIO, SEDES, HORARIO, TARIFAS, waLink } from '../data/local'
-import { url } from '../lib/url'
-const desde = TARIFAS[0].filas[0]
+import { SEDES, HORARIO, PRECIO_HORA_PC, TEXTOS, PORTADA_MEDIA } from '../data/local'
+import Icono from './Icono.astro'
 ---
 
 <section class="hero" id="hero" data-hero data-horario={JSON.stringify(HORARIO.dias)}>
-  <div class="escena" data-hero-escena>
-    <div class="ventana" data-hero-ventana>
-      <video src={url('/media/piso1-sala.mp4')} poster={url('/media/piso1-sala-poster.webp')} muted loop playsinline autoplay preload="metadata"></video>
-      <div class="sombra"></div>
+  <div class="contenedor intro">
+    <h1 class="titulo-xl" data-hero-titulo>{TEXTOS.portada.titulo}</h1>
+    <p class="lead" data-hero-pieza>{TEXTOS.portada.texto}</p>
+    <div class="acciones" data-hero-pieza>
+      <a class="btn" href="#reserva">Reservar sesión</a>
+      <a class="btn btn-ghost" href="#precios">Ver precios</a>
     </div>
 
-    <p class="label ubicacion">
-      Sala de videojuegos · {NEGOCIO.lema}
-    </p>
-
-    <h1 class="marca" data-hero-marca>
-      <span>Gamer</span>
-      <span>Zone</span>
-    </h1>
-
-    <div class="pie" data-hero-pie>
-      <!-- Lo esencial de un vistazo: la página también tiene que informar rápido -->
-      <dl class="rapidos">
-        <div>
-          <dt class="label">Sedes</dt>
-          <dd>{SEDES.length} en {NEGOCIO.ciudad.texto}</dd>
-        </div>
-        <div>
-          <dt class="label" data-hero-estado-label>Horario</dt>
-          <dd class:list={{ pendiente: HORARIO.pendiente }} data-hero-estado>10:00 – 22:00</dd>
-        </div>
-        <div>
-          <dt class="label">PC gamer desde</dt>
-          <dd class:list={{ pendiente: desde.pendiente }}>{desde.precio} / hora</dd>
-        </div>
-        <div>
-          <dt class="label">Viernes y sábado</dt>
-          <dd>Transnochón</dd>
-        </div>
-      </dl>
-      <div class="fila-pie">
-      <p class="lead">PCs gamer, Xbox 360, One y Series S, y una sala VIP privada. Pagas por hora, con aire acondicionado y servicio en tu puesto.</p>
-      <div class="acciones">
-        <a class="btn" href={waLink()} target="_blank" rel="noopener">Reservar sesión</a>
-        <a class="btn btn-ghost" href="#tarifas">Ver tarifas</a>
+    <!-- Lo esencial de un vistazo -->
+    <dl class="rapidos" data-hero-pieza>
+      <div>
+        <dt class="visually-hidden">Estado</dt>
+        <dd class:list={['estado', { pendiente: HORARIO.pendiente }]} data-hero-estado>Horario 10:00 – 22:00</dd>
       </div>
+      <div>
+        <dt class="visually-hidden">PC gamer</dt>
+        <dd><Icono nombre="monitor" /><span>PC desde <span class:list={{ pendiente: PRECIO_HORA_PC.pendiente }}>{PRECIO_HORA_PC.texto}</span>/h</span></dd>
       </div>
-    </div>
+      <div>
+        <dt class="visually-hidden">Sedes</dt>
+        <dd><Icono nombre="mapa" />{SEDES.length} sedes</dd>
+      </div>
+      <div>
+        <dt class="visually-hidden">Viernes y sábado</dt>
+        <dd><Icono nombre="noche" />Transnochón vie y sáb</dd>
+      </div>
+    </dl>
+  </div>
+
+  <!-- La sala entra como tarjeta y se abre a pantalla completa con el scroll -->
+  <div class="media" data-hero-media>
+    <video src={PORTADA_MEDIA.video} poster={PORTADA_MEDIA.poster} muted loop playsinline autoplay preload="metadata" aria-label="Sala de PCs de GamerZone"></video>
   </div>
 </section>
 
 <script>
   import { estadoHoy, type DiaHorario } from '../lib/horario'
   const hero = document.querySelector<HTMLElement>('[data-hero]')
-  if (hero) {
+  const valor = hero?.querySelector<HTMLElement>('[data-hero-estado]')
+  if (hero && valor) {
     const estado = estadoHoy(JSON.parse(hero.dataset.horario || '[]') as DiaHorario[])
-    const label = hero.querySelector('[data-hero-estado-label]')
-    const valor = hero.querySelector('[data-hero-estado]')
-    if (label) label.textContent = estado.abierto ? 'Abierto ahora' : 'Cerrado ahora'
-    if (valor) valor.textContent = estado.corto
+    valor.textContent = `${estado.abierto ? 'Abierto' : 'Cerrado'} · ${estado.corto}`
+    valor.toggleAttribute('data-abierto', estado.abierto)
   }
 </script>
 
 <style>
-  .escena {
-    position: relative;
-    height: 100svh;
-    overflow: hidden;
-    background:
-      radial-gradient(ellipse 50% 60% at 75% 40%, var(--halo-magenta), transparent 70%),
-      radial-gradient(ellipse 45% 50% at 15% 85%, var(--halo-cian), transparent 70%);
+  .hero {
+    padding-top: calc(var(--nav-h) + clamp(3rem, 9vh, 6rem));
+    overflow: clip;
   }
-
-  /* La foto entra como una ventana a la derecha y se abre a pantalla completa con el scroll */
-  .ventana {
-    position: absolute;
-    inset: 0;
-    clip-path: inset(14% var(--gutter) 30% 42% round var(--radio-media));
-  }
-  .ventana video { width: 100%; height: 100%; object-fit: cover; }
-  .sombra {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgb(5 7 10 / 0.9), transparent 55%);
-  }
-
-  .ubicacion {
-    position: absolute;
-    top: calc(var(--nav-h) + var(--s-5));
-    left: var(--gutter);
-  }
-
-  .marca {
-    position: absolute;
-    left: var(--gutter);
-    right: var(--gutter);
-    bottom: clamp(13rem, 30vh, 17rem);
+  .intro {
     display: grid;
-    font: 900 var(--t-mega) / 0.8 var(--f-display);
-    font-stretch: var(--stretch-condensado);
-    text-transform: uppercase;
-    letter-spacing: -0.01em;
-    pointer-events: none;
-  }
-  /* "GAMER" lleva el degradado RGB con su propio brillo */
-  .marca span:last-child {
-    background: var(--rgb);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    filter: drop-shadow(0 0 28px rgb(47 224 255 / 0.35)) drop-shadow(0 0 60px rgb(255 47 166 / 0.25));
-  }
-
-  .pie {
-    position: absolute;
-    left: var(--gutter);
-    right: var(--gutter);
-    bottom: var(--s-4);
-    display: grid;
+    justify-items: center;
     gap: var(--s-3);
+    text-align: center;
   }
-  /* Franja de datos rápidos, con hairlines como las cifras */
-  .rapidos {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    border-top: 1px solid rgb(238 246 255 / 0.15);
-  }
-  .rapidos div { display: grid; gap: 0.35rem; padding: var(--s-2) var(--s-2) 0 0; }
-  .rapidos div + div { padding-left: var(--s-2); border-left: 1px solid rgb(238 246 255 / 0.1); }
-  .rapidos dd { font: 700 var(--t-xl) / 1.1 var(--f-display); font-stretch: 70%; text-transform: uppercase; }
-  .fila-pie {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: var(--s-4);
-  }
-  .pie .lead { color: var(--texto); }
-  .acciones { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+  .intro .titulo-xl { max-width: 13ch; }
+  .intro .lead { max-width: 52ch; }
+  .acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: var(--s-1); }
 
-  @media (max-width: 64rem) {
-    .fila-pie { flex-direction: column; align-items: flex-start; }
+  .rapidos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-1) var(--s-4);
+    margin-top: var(--s-3);
+    font: 600 var(--t-s) / 1.3 var(--f-sans);
+    color: var(--sobre-oscuro-2);
   }
+  .rapidos dd { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .rapidos :global(.icono) { width: 1.1rem; height: 1.1rem; color: var(--sobre-oscuro); }
+  .rapidos .estado { color: var(--sobre-oscuro); }
+
+  .media {
+    height: min(100svh, 62rem);
+    margin-top: clamp(3rem, 7vh, 4.5rem);
+    /* La tarjeta empieza con el ancho del contenedor y bordes redondeados */
+    clip-path: inset(0 max(var(--gutter), (100% - var(--ancho-max)) / 2) round var(--radio-l));
+  }
+  .media video { width: 100%; height: 100%; object-fit: cover; }
+
   @media (max-width: 47.99rem) {
-    .ventana { clip-path: inset(calc(var(--nav-h) + 3.5rem) var(--gutter) 48% var(--gutter) round var(--radio-media)); }
-    .ubicacion { top: calc(var(--nav-h) + var(--s-2)); }
-    .marca { bottom: 15.5rem; font-size: clamp(4.5rem, 27vw, 9rem); }
-    .pie { bottom: var(--s-4); }
-    .rapidos { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--s-1); }
-    .rapidos div + div:nth-child(3) { padding-left: 0; border-left: 0; }
-    .rapidos dd { font-size: var(--t-l); }
-    .pie .lead { display: none; }
-    .acciones { display: none; }
+    .hero { padding-top: calc(var(--nav-h) + var(--s-5)); }
+    .rapidos { display: grid; grid-template-columns: repeat(2, auto); justify-content: center; text-align: left; gap: var(--s-2) var(--s-3); }
+    .acciones { width: 100%; }
+    .acciones .btn { flex: 1; }
+    .media { height: 70svh; }
   }
 </style>
