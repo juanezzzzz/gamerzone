@@ -1,42 +1,36 @@
 ---
 import { JUEGOS, TEXTOS, waLink } from '../data/local'
 import Icono from './Icono.astro'
-// Dos filas con orden distinto para que no se lean como copia
-const filas = [JUEGOS, [...JUEGOS.slice(4), ...JUEGOS.slice(0, 4)]]
 ---
 
-<section class="juegos" id="juegos" data-juegos>
-  <!-- Ambiente: los nombres pasan en dos filas; el scroll las acelera -->
+<section class="juegos claro" id="juegos" data-juegos>
+  <!-- Transición: los nombres pasan en una fila; el scroll la acelera -->
   <div class="marquesina" aria-hidden="true">
-    {
-      filas.map((fila, i) => (
-        <div class="fila" data-fila={i % 2 ? '-1' : '1'}>
-          {[0, 1].map(() => (
-            <div class="tramo">
-              {fila.map((j) => (
-                <span class="juego">{j.nombre}</span>
-              ))}
-            </div>
+    <div class="fila" data-fila="1">
+      {[0, 1].map(() => (
+        <div class="tramo">
+          {JUEGOS.map((j) => (
+            <span class="juego">{j.nombre}</span>
           ))}
         </div>
-      ))
-    }
+      ))}
+    </div>
   </div>
 
   <!-- Lista consultable: responde "¿tienen mi juego?" -->
-  <div class="contenedor catalogo" data-catalogo>
-    <header class="cabeza" data-reveal>
+  <div class="contenedor" data-catalogo>
+    <header class="cabeza-doble cabeza" data-reveal>
       <h2 class="titulo">{TEXTOS.juegos.titulo}</h2>
       <p class="lead">
         Los más pedidos ya están instalados. ¿No ves el tuyo? <a href={waLink('Hola, ¿tienen instalado este juego?')} target="_blank" rel="noopener">Escríbenos</a> y te lo dejamos listo.
       </p>
-      <div class="filtros" role="group" aria-label="Filtrar por plataforma">
-        {[['todos', 'Todos'], ['pc', 'PC'], ['xbox', 'Xbox']].map(([v, t], i) => (
-          <button type="button" class="filtro" data-filtro={v} aria-pressed={i === 0 ? 'true' : 'false'}>{t}</button>
-        ))}
-      </div>
     </header>
-    <ul class="lista">
+    <div class="filtros" role="group" aria-label="Filtrar por plataforma" data-reveal>
+      {[['todos', 'Todos'], ['pc', 'PC'], ['xbox', 'Xbox']].map(([v, t], i) => (
+        <button type="button" class="filtro" data-filtro={v} aria-pressed={i === 0 ? 'true' : 'false'}>{t}</button>
+      ))}
+    </div>
+    <ul class="lista" data-reveal>
       {
         JUEGOS.map((j) => (
           <li class="item" data-en={j.en.join(' ')}>
@@ -73,38 +67,28 @@ const filas = [JUEGOS, [...JUEGOS.slice(4), ...JUEGOS.slice(0, 4)]]
 </script>
 
 <style>
-  .juegos { padding-block: var(--s-seccion); overflow: clip; }
+  .juegos { padding-block: var(--s-6) var(--s-seccion); overflow: clip; }
 
-  .marquesina { display: grid; gap: 0.25rem; margin-bottom: var(--s-6); }
+  .marquesina { margin-bottom: var(--s-6); }
   .fila { display: flex; width: max-content; }
   .tramo { display: flex; }
   .juego {
     padding-right: 0.6em;
-    font: 800 clamp(3rem, 8vw, 7rem) / 1.05 var(--f-sans);
+    font: 800 clamp(2.5rem, 6vw, 5rem) / 1.1 var(--f-sans);
     font-stretch: var(--ancho-titulo);
     letter-spacing: -0.03em;
     white-space: nowrap;
   }
-  .juego::after { content: '·'; padding-left: 0.6em; color: var(--acento); }
-  .fila:nth-child(2) .juego { color: var(--grafito-3); }
-  .fila:nth-child(2) .juego::after { color: var(--grafito-3); }
+  .juego::after { content: '·'; padding-left: 0.6em; color: var(--acento-texto); }
 
-  .catalogo {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: var(--s-4) var(--s-6);
-    align-items: start;
-  }
-  .cabeza { display: grid; gap: var(--s-2); }
-  .cabeza a { color: var(--acento); }
+  .cabeza { margin-bottom: var(--s-4); }
+  .cabeza a { color: var(--acento-texto); font-weight: 600; }
   .filtros {
     display: inline-flex;
-    justify-self: start;
     gap: 0.25rem;
-    margin-top: var(--s-2);
     padding: 0.25rem;
     border-radius: var(--radio-boton);
-    background: var(--grafito-2);
+    background: var(--linea-clara);
   }
   .filtro {
     min-height: 2.5rem;
@@ -112,47 +96,45 @@ const filas = [JUEGOS, [...JUEGOS.slice(4), ...JUEGOS.slice(0, 4)]]
     border: 0;
     border-radius: var(--radio-boton);
     background: transparent;
-    color: var(--sobre-oscuro-2);
+    color: var(--tinta-2);
     font: 600 var(--t-s) / 1 var(--f-sans);
     cursor: pointer;
-    transition: background-color var(--dur-micro), color var(--dur-micro);
   }
-  .filtro:hover { color: var(--sobre-oscuro); }
-  .filtro[aria-pressed='true'] { background: var(--sobre-oscuro); color: var(--grafito); }
+  .filtro:hover { color: var(--tinta); }
+  .filtro[aria-pressed='true'] { background: var(--tinta); color: var(--blanco); }
 
-  .lista { border-top: 1px solid var(--linea-oscura); }
+  .lista {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--s-5);
+    margin-top: var(--s-3);
+  }
   .item {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: var(--s-3);
-    padding-block: 1rem;
-    border-bottom: 1px solid var(--linea-oscura);
+    gap: 0.1rem var(--s-2);
+    padding-block: 0.9rem;
+    border-top: 1px solid var(--linea-clara);
   }
   .item[hidden] { display: none; }
   .nombre { font: 700 var(--t-l) / 1.2 var(--f-sans); }
-  .genero { font-size: var(--t-s); color: var(--sobre-oscuro-2); }
-  .plataformas { display: flex; gap: 0.4rem; min-width: 9.5rem; justify-content: flex-end; }
+  .genero { grid-row: 2; font-size: var(--t-s); color: var(--tinta-2); }
+  .plataformas { grid-row: 1 / span 2; grid-column: 2; display: flex; gap: 0.4rem; }
   .plataforma {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
     padding: 0.3rem 0.65rem;
     border-radius: var(--radio-boton);
-    background: var(--grafito-2);
+    background: var(--blanco);
     font: 600 var(--t-xs) / 1.2 var(--f-sans);
   }
-  .plataforma :global(.icono) { width: 0.95rem; height: 0.95rem; color: var(--acento); }
-  .nota { grid-column: 2; }
+  .plataforma :global(.icono) { width: 0.95rem; height: 0.95rem; color: var(--acento-texto); }
+  .nota { margin-top: var(--s-3); }
 
-  @media (max-width: 64rem) {
-    .catalogo { grid-template-columns: 1fr; }
-    .nota { grid-column: 1; }
-  }
   @media (max-width: 47.99rem) {
-    .item { grid-template-columns: minmax(0, 1fr) auto; row-gap: 0.25rem; }
-    .genero { grid-row: 2; }
-    .plataformas { grid-row: 1 / span 2; grid-column: 2; min-width: 0; flex-direction: column; align-items: flex-end; }
+    .lista { grid-template-columns: 1fr; }
   }
   :global(.reduced) .marquesina { display: none; }
 </style>

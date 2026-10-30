@@ -187,7 +187,7 @@ collections:
             name: instagram
             widget: object
             fields:
-              - { label: Usuario, name: texto, widget: string, hint: 'Con @. Ej. @gamerzone' }
+              - { label: Usuario, name: texto, widget: string, required: false, hint: 'Con @. Ej. @gamerzone. Vacío: no se muestra.' }
               - *pendiente
           - label: Ciudad
             name: ciudad

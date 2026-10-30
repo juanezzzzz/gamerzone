@@ -58,8 +58,7 @@ const CSS = `
   .caption.is-active { opacity: 1; transform: translate(-50%, 0); }
   .kicker { font: 500 .75rem/1 var(--mono); letter-spacing: .2em; color: var(--cyan);
     text-transform: uppercase; margin-bottom: .9rem; }
-  .title { font: 900 clamp(2.4rem, 7vw, 5rem)/.9 var(--display); font-stretch: 62%; text-transform: uppercase;
-    text-shadow: 0 0 30px rgba(47, 224, 255, .25); }
+  .title { font: 800 clamp(1.75rem, 4.4vw, 3.25rem)/1 var(--display); font-stretch: 112%; letter-spacing: -.025em; }
 
   .hint { position: absolute; left: 50%; top: calc(var(--top) + 3vh); transform: translateX(-50%);
     font: 500 .7rem/1 var(--mono); letter-spacing: .2em; color: var(--muted);
@@ -91,6 +90,7 @@ const CSS = `
   .auto .progress { display: none; }
   .auto .hint { top: auto; bottom: 3vh; }
   .auto .caption { bottom: calc(6vh + 64px); }
+  .auto .hint, .auto .progress, .auto .sound { display: none; }
   .poster-mode .caption, .poster-mode .hint, .poster-mode .progress, .poster-mode .sound, .poster-mode .loader { display: none; }
 
   @media (max-width: 640px) {
@@ -625,7 +625,7 @@ function mount(host, root, opts) {
 
     // ?demo=1 recorre la animación sola (previsualización sin scroll); ?demo=0.6 se detiene en ese punto
     if (params.has('demo')) target = Math.min(clamp((t - 1.5) / 5, 0, 1), +params.get('demo') || 1);
-    else if (opts.autoplay && !reduceMotion) target = clamp((t - 0.4) / 4.2, 0, 1);
+    else if (opts.autoplay && !reduceMotion) target = clamp((t - 0.2) / 2.6, 0, 1);
     current += (target - current) * 0.1; // suavizado del scroll
     if (Math.abs(target - current) < 1e-4) current = target;
 
@@ -638,7 +638,7 @@ function mount(host, root, opts) {
 
     // neón del escudo: se enciende al final, destella con cada impacto y sube con el mouse encima
     if (shieldRim) shieldRim.emissiveIntensity = shieldRim.userData.base * (0.4 + done * 0.65 + flash * 0.7 + hover * 0.35);
-    bloom.strength = 0.15 + done * 0.13 + flash * 0.25 + hover * 0.06;
+    bloom.strength = 0.06 + done * 0.05 + flash * 0.16 + hover * 0.04;
 
     // cámara: un poco más lejos y alta al inicio (para que entre la pila), se acerca al armarse
     const e = reduceMotion ? 1 : ease(smoothstep(current, 0, 0.75));

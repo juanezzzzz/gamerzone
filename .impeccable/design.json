@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-29T14:15:12.923Z",
+  "generatedAt": "2026-10-30T12:44:16.340Z",
   "title": "Design System: GamerZone E-Sports Center",
   "extensions": {
     "colorMeta": {
@@ -169,21 +169,6 @@
           "#fcfcfd"
         ]
       },
-      "tinta-hover": {
-        "role": "neutral",
-        "displayName": "Tinta hover",
-        "canonical": "#262b33",
-        "tonalRamp": [
-          "#0a0b0d",
-          "#111317",
-          "#191c21",
-          "#20252b",
-          "#51555c",
-          "#888a8f",
-          "#bebfc2",
-          "#e9eaeb"
-        ]
-      },
       "acento": {
         "role": "primary",
         "displayName": "Cian del logo",
@@ -197,21 +182,6 @@
           "#8deaf5",
           "#c1f3f9",
           "#eafbfd"
-        ]
-      },
-      "acento-hover": {
-        "role": "primary",
-        "displayName": "Cian claro",
-        "canonical": "#6ae6f4",
-        "tonalRamp": [
-          "#1b3a3d",
-          "#30676e",
-          "#45969f",
-          "#5ac4cf",
-          "#88ebf6",
-          "#adf1f9",
-          "#d2f8fc",
-          "#f0fdfe"
         ]
       },
       "acento-texto": {
@@ -274,6 +244,36 @@
           "#fff3f2"
         ]
       },
+      "error": {
+        "role": "tertiary",
+        "displayName": "Rojo de error",
+        "canonical": "#c0392b",
+        "tonalRamp": [
+          "#300e0b",
+          "#561a13",
+          "#7d251c",
+          "#a33025",
+          "#cd6155",
+          "#dc928a",
+          "#ecc4bf",
+          "#f9ebea"
+        ]
+      },
+      "error-fondo": {
+        "role": "tertiary",
+        "displayName": "Fondo de error",
+        "canonical": "#fdf1ef",
+        "tonalRamp": [
+          "#3f3c3c",
+          "#726c6c",
+          "#a49d9b",
+          "#d7cdcb",
+          "#fdf4f2",
+          "#fef7f6",
+          "#fefbfa",
+          "#fffefd"
+        ]
+      },
       "vip": {
         "role": "secondary",
         "displayName": "Dorado VIP",
@@ -287,21 +287,6 @@
           "#efdbb2",
           "#f6ebd5",
           "#fcf8f1"
-        ]
-      },
-      "vip-hover": {
-        "role": "secondary",
-        "displayName": "Dorado VIP hover",
-        "canonical": "#ecd09a",
-        "tonalRamp": [
-          "#3b3427",
-          "#6a5e45",
-          "#998764",
-          "#c9b183",
-          "#f0d9ae",
-          "#f5e5c7",
-          "#f9f1e1",
-          "#fdfaf5"
         ]
       },
       "vip-noche": {
@@ -323,11 +308,19 @@
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Titular del hero y hora grande del horario. Archivo 800, ancho 112%."
+        "purpose": "Solo el titular del hero. Archivo 800, ancho 112%."
+      },
+      "headline-xl": {
+        "displayName": "Headline XL",
+        "purpose": "Título de las secciones a sangre y hora grande del horario."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Título de cada sección, nombres de consola, valores de specs de PC."
+        "purpose": "Título de las secciones de información."
+      },
+      "escena": {
+        "displayName": "Escena",
+        "purpose": "Títulos de los grupos de Equipos, dentro de una pantalla fija."
       },
       "precio": {
         "displayName": "Precio",
@@ -335,7 +328,7 @@
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Subtítulos, nombres de plan, sede y comodidad. Ancho 106%."
+        "purpose": "Subtítulos, nombres de sede y de comodidad. Ancho 106%."
       },
       "lead": {
         "displayName": "Lead",
@@ -347,38 +340,43 @@
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Datos, notas, links de navegación, franja de datos del hero."
+        "purpose": "Datos, notas, links de navegación, etiquetas de campo."
       },
       "micro": {
         "displayName": "Micro",
-        "purpose": "Pastillas, etiquetas, años del eje, ahorro."
+        "purpose": "Pastillas, etiquetas, ahorro, títulos de la barra de datos."
       }
     },
     "shadows": [
       {
         "name": "sombra-tarjeta",
         "value": "0 1px 2px rgb(11 13 16 / 0.04), 0 8px 24px -12px rgb(11 13 16 / 0.12)",
-        "purpose": "Tarjetas blancas sobre nube. Solo en claro."
+        "purpose": "Carta de tarifas, sedes y segmento activo. Solo sobre claro."
+      },
+      {
+        "name": "panel-sobre-medio",
+        "value": "0 24px 60px -20px rgb(0 0 0 / 0.5)",
+        "purpose": "Solo el panel de reserva sobre el video."
       },
       {
         "name": "linea-barra-oscura",
         "value": "0 1px 0 rgb(255 255 255 / 0.06)",
-        "purpose": "Borde de la nav sólida y del CTA móvil sobre oscuro."
+        "purpose": "Borde inferior de la capa oscura de la barra."
       },
       {
         "name": "linea-barra-clara",
         "value": "0 1px 0 var(--linea-clara)",
-        "purpose": "Borde de la nav sólida sobre secciones claras."
+        "purpose": "Borde inferior de la capa clara de la barra."
       },
       {
-        "name": "vidrio-oscuro",
-        "value": "background: rgb(11 13 16 / 0.72); backdrop-filter: saturate(180%) blur(20px)",
-        "purpose": "Nav sólida y CTA móvil (0.8) sobre oscuro."
+        "name": "capa-barra-oscura",
+        "value": "background: rgb(11 13 16 / 0.92); backdrop-filter: saturate(180%) blur(20px)",
+        "purpose": "Capa oscura de la barra, casi sólida."
       },
       {
-        "name": "vidrio-claro",
-        "value": "background: rgb(244 245 247 / 0.78); backdrop-filter: saturate(180%) blur(20px)",
-        "purpose": "Nav sólida sobre secciones claras."
+        "name": "capa-barra-clara",
+        "value": "background: rgb(244 245 247 / 0.94); backdrop-filter: saturate(180%) blur(20px)",
+        "purpose": "Capa clara de la barra, casi sólida."
       }
     ],
     "motion": [
@@ -390,32 +388,72 @@
       {
         "name": "dur-micro",
         "value": "250ms",
-        "purpose": "Hover, press y flecha de enlace."
+        "purpose": "Press, flecha de enlace y capa de hover del botón."
+      },
+      {
+        "name": "hover-capa",
+        "value": "currentColor, opacity 0 a 0.12, 250ms var(--ease-ui)",
+        "purpose": "Hover del botón: una capa que aparece; no se anima el fondo."
+      },
+      {
+        "name": "cruce-barra",
+        "value": "opacity 400ms var(--ease-ui) entre dos capas",
+        "purpose": "La barra aparece a media pantalla del hero y cruza de oscura a clara según la superficie debajo."
+      },
+      {
+        "name": "intro",
+        "value": "hasta 3400ms o primer gesto; opacity a 0 en 600ms",
+        "purpose": "Logo 3D encima de la página, una vez por visita. Dispara gz:intro-fin."
+      },
+      {
+        "name": "entrada-hero",
+        "value": "video scale 1.08 a 1, 2.4s; piezas opacity 0 a 1 y y 28px a 0, 1.1s, stagger 0.09s, expo.out",
+        "purpose": "Entrada del hero al terminar la intro."
+      },
+      {
+        "name": "salida-hero",
+        "value": "fondo yPercent 18; contenido opacity 0 y y -40px, scrub 0.4",
+        "purpose": "Al bajar, el fondo se queda atrás y el contenido se va."
       },
       {
         "name": "reveal",
         "value": "opacity 0 a 1, translateY 24px a 0, 0.9s expo.out, stagger 0.08s, start top 88%",
-        "purpose": "Entrada única de contenido con data-reveal."
+        "purpose": "Entrada del contenido corriente con data-reveal."
       },
       {
-        "name": "medio-que-se-abre",
-        "value": "clip-path inset(... round var(--radio-l)) a inset(0 round 0), scrub 0.6",
-        "purpose": "Video del hero y ventana de la VIP crecen a sangre."
+        "name": "apertura-carta",
+        "value": "y 56px, opacity 0 y clip-path inset(0% 6% 0% 6% round 28px) a su estado, 1.2s expo.out",
+        "purpose": "Entrada de la carta de tarifas."
       },
       {
-        "name": "pin-horizontal",
-        "value": "pin + scrub 0.6, solo desde 64.0625rem",
-        "purpose": "Pista de consolas con eje 2005-2020."
+        "name": "pin-equipos",
+        "value": "pin sin scrub, 42vh por paso, solo desde 64.0625rem",
+        "purpose": "El scroll elige el paso del escenario de Equipos."
       },
       {
-        "name": "crossfade-pegado",
-        "value": "opacity 700ms + scale 1.04 a 1 en 1200ms, var(--ease-ui)",
-        "purpose": "Columna pegada de PCs que cambia con cada spec."
+        "name": "cambio-de-paso",
+        "value": "opacity 700ms + scale 1.05 a 1 en 1200ms; grupo opacity 400ms + translateY 12px en 500ms; línea scaleX 600ms, var(--ease-ui)",
+        "purpose": "Cambio de imagen, grupo y línea activa en Equipos."
+      },
+      {
+        "name": "sala-que-crece",
+        "value": "clip-path inset(12% 18% 12% 18% round var(--radio-l)) a inset(0 round 0), scrub 0.6, pin +=70% solo en escritorio",
+        "purpose": "La sala VIP crece a sangre; bajo 64rem sin pin."
+      },
+      {
+        "name": "marquesina",
+        "value": "transform continuo; la velocidad del scroll la acelera hasta 7x y cambia su dirección",
+        "purpose": "Nombres de juegos como transición."
+      },
+      {
+        "name": "parallax-comodidades",
+        "value": "yPercent -6 a 6, scrub",
+        "purpose": "La foto de Comodidades va más despacio que la página."
       },
       {
         "name": "reduced-motion",
         "value": "prefers-reduced-motion: reduce",
-        "purpose": "Sin Lenis, pins ni scrubs; consolas como carrusel nativo; marquesina oculta; pulso apagado."
+        "purpose": "Sin intro, Lenis, pins ni scrubs; Equipos cambia con un toque; VIP abierta; marquesina oculta; pulso apagado."
       }
     ],
     "breakpoints": [
@@ -438,17 +476,17 @@
       "name": "Botón principal",
       "kind": "button",
       "refersTo": "boton",
-      "description": "Acción principal sobre oscuro: reservar por WhatsApp.",
+      "description": "Acción principal sobre oscuro: reservar. El hover es una capa de currentColor que aparece por opacidad.",
       "html": "<div class=\"ds-oscuro\"><a class=\"ds-btn\" href=\"#\">Reservar sesión</a></div>",
-      "css": ".ds-oscuro { background: #0b0d10; padding: 24px; } .ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0 1.5rem; border: 0; border-radius: 999px; background: var(--acento, #2fd8ec); color: var(--sobre-acento, #04161a); font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn:hover { background: var(--acento-hover, #6ae6f4); } .ds-btn:active { transform: scale(0.97); } .ds-btn:focus-visible { outline: 2px solid #2fd8ec; outline-offset: 3px; }"
+      "css": ".ds-oscuro { background: #0b0d10; padding: 24px; } .ds-btn { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0 1.5rem; border: 0; border-radius: 999px; font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; white-space: nowrap; cursor: pointer; transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn::after { content: ''; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn:hover::after { opacity: 0.12; } .ds-btn:active { transform: scale(0.97); } .ds-btn:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; } .ds-btn { background: var(--acento, #2fd8ec); color: var(--sobre-acento, #04161a); }"
     },
     {
       "name": "Botón ghost",
       "kind": "button",
       "refersTo": "boton-ghost",
-      "description": "Acción secundaria: ver precios, reservar un plan. Toma el color del texto de su superficie.",
+      "description": "Acción secundaria. Toma el color del texto de su superficie.",
       "html": "<div class=\"ds-oscuro-g\"><a class=\"ds-btn-ghost\" href=\"#\">Ver precios</a></div>",
-      "css": ".ds-oscuro-g { background: #0b0d10; color: #f4f6f8; padding: 24px; } .ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0 1.5rem; border-radius: 999px; background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; transition: background-color 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-ghost:hover { background: rgb(127 127 127 / 0.12); } .ds-btn-ghost:active { transform: scale(0.97); } .ds-btn-ghost:focus-visible { outline: 2px solid #2fd8ec; outline-offset: 3px; }"
+      "css": ".ds-oscuro-g { background: #0b0d10; color: #f4f6f8; padding: 24px; } .ds-btn-ghost { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0 1.5rem; border: 0; border-radius: 999px; font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; white-space: nowrap; cursor: pointer; transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-ghost::after { content: ''; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-ghost:hover::after { opacity: 0.12; } .ds-btn-ghost:active { transform: scale(0.97); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; } .ds-btn-ghost { background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }"
     },
     {
       "name": "Botón sobre claro",
@@ -456,7 +494,7 @@
       "refersTo": "boton-claro",
       "description": "Dentro de .claro el botón sólido pasa a tinta con texto blanco.",
       "html": "<div class=\"ds-claro\"><a class=\"ds-btn-claro\" href=\"#\">Cómo llegar</a></div>",
-      "css": ".ds-claro { background: #f4f5f7; padding: 24px; } .ds-btn-claro { display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.5rem; border-radius: 999px; background: var(--tinta, #0b0d10); color: var(--blanco, #fff); font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; transition: background-color 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-claro:hover { background: var(--tinta-hover, #262b33); } .ds-btn-claro:active { transform: scale(0.97); } .ds-btn-claro:focus-visible { outline: 2px solid #2fd8ec; outline-offset: 3px; }"
+      "css": ".ds-claro { background: #f4f5f7; padding: 24px; } .ds-btn-claro { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0 1.5rem; border: 0; border-radius: 999px; font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; white-space: nowrap; cursor: pointer; transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-claro::after { content: ''; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-claro:hover::after { opacity: 0.12; } .ds-btn-claro:active { transform: scale(0.97); } .ds-btn-claro:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; } .ds-btn-claro { background: var(--tinta, #0b0d10); color: var(--blanco, #fff); }"
     },
     {
       "name": "Botón VIP",
@@ -464,31 +502,39 @@
       "refersTo": "boton-vip",
       "description": "Solo dentro de la sala VIP.",
       "html": "<div class=\"ds-vip-fondo\"><a class=\"ds-btn-vip\" href=\"#\">Reservar la sala VIP</a></div>",
-      "css": ".ds-vip-fondo { background: #0f0c08; padding: 24px; } .ds-btn-vip { display: inline-flex; align-items: center; min-height: 3rem; padding: 0 1.5rem; border-radius: 999px; background: var(--vip, #e2bd73); color: var(--vip-noche, #0f0c08); font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; transition: background-color 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-vip:hover { background: var(--vip-hover, #ecd09a); } .ds-btn-vip:active { transform: scale(0.97); } .ds-btn-vip:focus-visible { outline: 2px solid #2fd8ec; outline-offset: 3px; }"
+      "css": ".ds-vip-fondo { background: #0f0c08; padding: 24px; } .ds-btn-vip { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0 1.5rem; border: 0; border-radius: 999px; font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; white-space: nowrap; cursor: pointer; transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-vip::after { content: ''; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-vip:hover::after { opacity: 0.12; } .ds-btn-vip:active { transform: scale(0.97); } .ds-btn-vip:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; } .ds-btn-vip { background: var(--vip, #e2bd73); color: var(--vip-noche, #0f0c08); }"
     },
     {
-      "name": "Tarjeta de tarifa",
+      "name": "Carta de tarifas",
       "kind": "card",
       "refersTo": "tarjeta-clara",
-      "description": "Tarjeta blanca sobre nube con monto grande y filas secundarias separadas por línea.",
-      "html": "<div class=\"ds-claro-t\"><article class=\"ds-tarifa\"><h3 class=\"ds-tarifa-nombre\">PC gamer</h3><p class=\"ds-tarifa-principal\"><span class=\"ds-monto\">$3.000</span><span class=\"ds-unidad\">por hora</span></p><dl class=\"ds-resto\"><div><dt>Transnochón</dt><dd>$20.000</dd></div><div><dt>Tres horas</dt><dd>$8.000</dd></div></dl></article></div>",
-      "css": ".ds-claro-t { background: #f4f5f7; padding: 24px; } .ds-tarifa { display: flex; flex-direction: column; gap: 1.5rem; max-width: 22rem; padding: 2rem; border-radius: 1.75rem; background: #fff; color: #0b0d10; box-shadow: 0 1px 2px rgb(11 13 16 / 0.04), 0 8px 24px -12px rgb(11 13 16 / 0.12); font-family: 'Archivo', 'Segoe UI', system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-tarifa-nombre { margin: 0; font: 700 1.25rem/1.2 'Archivo', 'Segoe UI', system-ui, sans-serif; } .ds-tarifa-principal { margin: 0; display: grid; gap: 0.15rem; } .ds-monto { font: 800 clamp(2.5rem, 4vw, 3.5rem)/1 'Archivo', 'Segoe UI', system-ui, sans-serif; font-stretch: 112%; letter-spacing: -0.03em; } .ds-unidad { font-weight: 500; color: #535c68; } .ds-resto { margin: 0; border-top: 1px solid #e1e4e9; } .ds-resto div { display: flex; justify-content: space-between; padding-block: 0.75rem; border-bottom: 1px solid #e1e4e9; } .ds-resto dt { color: #535c68; } .ds-resto dd { margin: 0; font-weight: 700; }"
+      "description": "Una sola pieza blanca sobre nube, con columnas separadas por línea; la tarifa VIP es la columna oscura con dorado y enlace con flecha.",
+      "html": "<div class=\"ds-claro-t\"><ul class=\"ds-carta\"><li class=\"ds-tarifa\"><h3 class=\"ds-nombre\">PC gamer</h3><p class=\"ds-principal\"><span class=\"ds-monto\">$3.000</span><span class=\"ds-unidad\">por hora</span></p><dl class=\"ds-resto\"><div><dt>Transnochón</dt><dd>$20.000</dd></div></dl></li><li class=\"ds-tarifa ds-tarifa-vip\"><h3 class=\"ds-nombre\">Sala VIP</h3><p class=\"ds-principal\"><span class=\"ds-monto\">$40.000</span><span class=\"ds-unidad\">la hora</span></p><a class=\"ds-enlace\" href=\"#\">Conocer la sala <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a></li></ul></div>",
+      "css": ".ds-claro-t { background: #f4f5f7; padding: 24px; } .ds-carta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none; overflow: hidden; border-radius: 1.75rem; background: #fff; color: #0b0d10; box-shadow: 0 1px 2px rgb(11 13 16 / 0.04), 0 8px 24px -12px rgb(11 13 16 / 0.12); font-family: 'Archivo', 'Segoe UI', system-ui, sans-serif; font-variant-numeric: tabular-nums; } .ds-tarifa { display: flex; flex-direction: column; gap: 1.5rem; padding: 2rem; } .ds-nombre { margin: 0; font: 700 1.25rem/1.2 'Archivo', 'Segoe UI', system-ui, sans-serif; } .ds-principal { margin: 0; display: grid; gap: 0.15rem; } .ds-monto { font: 800 clamp(2.5rem, 4vw, 3.5rem)/1 'Archivo', 'Segoe UI', system-ui, sans-serif; font-stretch: 112%; letter-spacing: -0.03em; } .ds-unidad { font-weight: 500; color: #535c68; } .ds-resto { margin: 0; } .ds-resto div { display: flex; justify-content: space-between; padding-block: 0.75rem; border-top: 1px solid #e1e4e9; } .ds-resto dt { color: #535c68; } .ds-resto dd { margin: 0; font-weight: 700; } .ds-tarifa-vip { background: #0f0c08; color: #f4f6f8; } .ds-tarifa-vip .ds-monto { color: #e2bd73; } .ds-tarifa-vip .ds-unidad { color: #a3acb7; } .ds-enlace { display: inline-flex; align-items: center; gap: 0.35rem; margin-top: auto; font-weight: 600; color: #e2bd73; text-decoration: none; text-underline-offset: 0.2em; } .ds-enlace:hover { text-decoration: underline; } .ds-enlace svg { width: 1em; height: 1em; transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-enlace:hover svg { transform: translateX(3px); } .ds-enlace:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; }"
     },
     {
       "name": "Barra de navegación",
       "kind": "nav",
       "refersTo": "nav",
-      "description": "Barra fija en vidrio grafito; sobre secciones claras toma vidrio nube y texto tinta.",
-      "html": "<header class=\"ds-nav\"><a class=\"ds-nav-logo\" href=\"#\">GamerZone</a><nav class=\"ds-nav-links\"><a href=\"#\">Precios</a><a href=\"#\">Sedes</a><a href=\"#\">PCs</a><a href=\"#\">Sala VIP</a></nav><a class=\"ds-nav-cta\" href=\"#\">Reservar</a></header>",
-      "css": ".ds-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1.5rem; height: 3.75rem; padding: 0 1.5rem; background: rgb(11 13 16 / 0.72); backdrop-filter: saturate(180%) blur(20px); box-shadow: 0 1px 0 rgb(255 255 255 / 0.06); color: #f4f6f8; font-family: 'Archivo', 'Segoe UI', system-ui, sans-serif; } .ds-nav-logo { font: 800 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; font-stretch: 112%; letter-spacing: -0.01em; color: inherit; text-decoration: none; } .ds-nav-links { display: flex; gap: 2rem; } .ds-nav-links a { font-size: 0.9375rem; color: #a3acb7; text-decoration: none; transition: color 250ms; } .ds-nav-links a:hover { color: #f4f6f8; } .ds-nav a:focus-visible { outline: 2px solid #2fd8ec; outline-offset: 3px; border-radius: 4px; } .ds-nav-cta { justify-self: end; display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0 1.1rem; border-radius: 999px; background: #2fd8ec; color: #04161a; font: 700 0.9375rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; } .ds-nav-cta:hover { background: #6ae6f4; }"
+      "description": "Barra fija casi sólida. Dos capas apiladas, oscura y clara; pasar de una a otra solo anima opacidad. Aquí, la oscura.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-nav-logo\" href=\"#\">GamerZone</a><nav class=\"ds-nav-links\"><a href=\"#\">Precios</a><a href=\"#\">Sedes</a><a href=\"#\" aria-current=\"true\">Equipos</a><a href=\"#\">Sala VIP</a><a href=\"#\">Juegos</a></nav><a class=\"ds-nav-cta\" href=\"#\">Reservar</a></header>",
+      "css": ".ds-nav { position: relative; isolation: isolate; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1.5rem; height: 3.75rem; padding: 0 1.5rem; color: #f4f6f8; font-family: 'Archivo', 'Segoe UI', system-ui, sans-serif; } .ds-nav::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgb(11 13 16 / 0.92); backdrop-filter: saturate(180%) blur(20px); box-shadow: 0 1px 0 rgb(255 255 255 / 0.06); } .ds-nav-logo { font: 800 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; font-stretch: 112%; letter-spacing: -0.01em; color: inherit; text-decoration: none; } .ds-nav-links { display: flex; gap: 2rem; } .ds-nav-links a { font-size: 0.9375rem; color: #a3acb7; text-decoration: none; } .ds-nav-links a:hover, .ds-nav-links a[aria-current] { color: #f4f6f8; } .ds-nav a:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; } .ds-nav-cta { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3rem; padding: 0 1.5rem; border: 0; border-radius: 999px; font: 700 1.0625rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; text-decoration: none; white-space: nowrap; cursor: pointer; transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-nav-cta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: currentColor; opacity: 0; transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-nav-cta:hover::after { opacity: 0.12; } .ds-nav-cta:active { transform: scale(0.97); } .ds-nav-cta:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; } .ds-nav-cta { justify-self: end; min-height: 2.25rem; padding: 0 1.1rem; background: #2fd8ec; color: #04161a; font-size: 0.9375rem; }"
     },
     {
-      "name": "Filtro y pastilla",
+      "name": "Filtro, pestaña y pastilla",
       "kind": "chip",
       "refersTo": "filtro-activo",
-      "description": "Carril de filtros del catálogo de juegos y pastillas de ficha o plataforma.",
-      "html": "<div class=\"ds-oscuro-c\"><div class=\"ds-filtros\"><button class=\"ds-filtro\" aria-pressed=\"true\">Todos</button><button class=\"ds-filtro\" aria-pressed=\"false\">PC</button><button class=\"ds-filtro\" aria-pressed=\"false\">Xbox</button></div><span class=\"ds-pastilla\">Xbox Series S</span></div>",
-      "css": ".ds-oscuro-c { background: #0b0d10; padding: 24px; display: grid; gap: 16px; justify-items: start; } .ds-filtros { display: inline-flex; gap: 0.25rem; padding: 0.25rem; border-radius: 999px; background: #14171c; } .ds-filtro { min-height: 2.5rem; padding: 0 1.25rem; border: 0; border-radius: 999px; background: transparent; color: #a3acb7; font: 600 0.9375rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; cursor: pointer; transition: background-color 250ms, color 250ms; } .ds-filtro:hover { color: #f4f6f8; } .ds-filtro[aria-pressed='true'] { background: #f4f6f8; color: #0b0d10; } .ds-filtro:focus-visible { outline: 2px solid #2fd8ec; outline-offset: 3px; } .ds-pastilla { padding: 0.35rem 0.8rem; border-radius: 999px; background: #14171c; color: #f4f6f8; font: 600 0.8125rem/1.3 'Archivo', 'Segoe UI', system-ui, sans-serif; }"
+      "description": "Carril de filtros y pastillas de plataforma sobre claro; pestañas de Equipos sobre oscuro.",
+      "html": "<div class=\"ds-chips-claro\"><div class=\"ds-carril\"><button class=\"ds-filtro\" aria-pressed=\"true\">Todos</button><button class=\"ds-filtro\" aria-pressed=\"false\">PC</button><button class=\"ds-filtro\" aria-pressed=\"false\">Xbox</button></div><span class=\"ds-pastilla\">Xbox</span></div><div class=\"ds-chips-oscuro\"><div class=\"ds-carril-o\"><button class=\"ds-pestana\" aria-pressed=\"true\">PC gamer</button><button class=\"ds-pestana\" aria-pressed=\"false\">Consola Xbox</button></div></div>",
+      "css": ".ds-chips-claro { background: #f4f5f7; padding: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; } .ds-chips-oscuro { background: #0b0d10; padding: 24px; } .ds-carril, .ds-carril-o { display: inline-flex; gap: 0.25rem; padding: 0.25rem; border-radius: 999px; } .ds-carril { background: #e1e4e9; } .ds-carril-o { background: #14171c; } .ds-filtro, .ds-pestana { min-height: 2.5rem; padding: 0 1.25rem; border: 0; border-radius: 999px; background: transparent; font: 600 0.9375rem/1 'Archivo', 'Segoe UI', system-ui, sans-serif; cursor: pointer; } .ds-filtro { color: #535c68; } .ds-filtro:hover { color: #0b0d10; } .ds-filtro[aria-pressed='true'] { background: #0b0d10; color: #fff; } .ds-pestana { color: #a3acb7; } .ds-pestana:hover { color: #f4f6f8; } .ds-pestana[aria-pressed='true'] { background: #f4f6f8; color: #0b0d10; } .ds-filtro:focus-visible, .ds-pestana:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; } .ds-pastilla { padding: 0.3rem 0.65rem; border-radius: 999px; background: #fff; color: #0b0d10; font: 600 0.8125rem/1.2 'Archivo', 'Segoe UI', system-ui, sans-serif; }"
+    },
+    {
+      "name": "Campo de reserva",
+      "kind": "input",
+      "refersTo": "campo",
+      "description": "Campo del panel claro de reserva, con foco en acento-texto y estado de error.",
+      "html": "<div class=\"ds-panel\"><div class=\"ds-campo\"><label for=\"ds-c1\">Tu nombre</label><input id=\"ds-c1\" placeholder=\"Ej.: Juan\"></div><div class=\"ds-campo\"><label for=\"ds-c2\">Día</label><input id=\"ds-c2\" aria-invalid=\"true\"><p class=\"ds-error\">Elige el día.</p></div></div>",
+      "css": ".ds-panel { display: grid; gap: 1rem; max-width: 24rem; padding: 2rem; border-radius: 1.75rem; background: #fff; color: #0b0d10; box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.5); } .ds-campo { display: grid; gap: 0.35rem; } .ds-campo label { font: 600 0.9375rem/1.3 'Archivo', 'Segoe UI', system-ui, sans-serif; } .ds-campo input { width: 100%; min-height: 2.75rem; padding: 0.6rem 0.85rem; border: 1px solid #e1e4e9; border-radius: 0.75rem; background: #f4f5f7; color: #0b0d10; font: 400 1.0625rem/1.3 'Archivo', 'Segoe UI', system-ui, sans-serif; caret-color: #00788a; } .ds-campo input::placeholder { color: #535c68; } .ds-campo input:hover { border-color: #535c68; } .ds-campo input:focus-visible { outline: 2px solid #00788a; outline-offset: 1px; border-color: transparent; background: #fff; } .ds-campo input[aria-invalid] { border-color: #c0392b; background: #fdf1ef; } .ds-error { margin: 0; font: 400 0.8125rem/1.3 'Archivo', 'Segoe UI', system-ui, sans-serif; color: #c0392b; }"
     },
     {
       "name": "Estado en vivo",
@@ -496,42 +542,43 @@
       "refersTo": "estado",
       "description": "Punto y texto: cian con pulso si está abierto, coral si cerró.",
       "html": "<div class=\"ds-oscuro-e\"><span class=\"ds-estado ds-abierto\">Abierto · hasta 22:00</span><span class=\"ds-estado\">Cerrado · abre 10:00</span></div>",
-      "css": ".ds-oscuro-e { background: #0b0d10; color: #f4f6f8; padding: 24px; display: flex; flex-wrap: wrap; gap: 24px; } .ds-estado { display: inline-flex; align-items: center; gap: 0.5rem; font: 600 0.9375rem/1.3 'Archivo', 'Segoe UI', system-ui, sans-serif; } .ds-estado::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #ff8a7a; } .ds-abierto::before { background: #2fd8ec; animation: ds-latido 2s infinite; } @keyframes ds-latido { 0% { box-shadow: 0 0 0 0 rgb(47 216 236 / 0.6); } 70% { box-shadow: 0 0 0 8px rgb(47 216 236 / 0); } 100% { box-shadow: 0 0 0 0 rgb(47 216 236 / 0); } } @media (prefers-reduced-motion: reduce) { .ds-abierto::before { animation: none; } }"
+      "css": ".ds-oscuro-e { background: #0b0d10; color: #f4f6f8; padding: 24px; display: flex; flex-wrap: wrap; gap: 24px; } .ds-estado { position: relative; display: inline-flex; align-items: center; gap: 0.5rem; font: 600 0.9375rem/1.3 'Archivo', 'Segoe UI', system-ui, sans-serif; } .ds-estado::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #ff8a7a; } .ds-abierto::before { background: #2fd8ec; } .ds-abierto::after { content: ''; position: absolute; left: 0; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #2fd8ec; animation: ds-latido 2s cubic-bezier(0.16, 1, 0.3, 1) infinite; } @keyframes ds-latido { from { transform: scale(1); opacity: 0.6; } to { transform: scale(3); opacity: 0; } } @media (prefers-reduced-motion: reduce) { .ds-abierto::after { animation: none; opacity: 0; } }"
     },
     {
-      "name": "Enlace con flecha",
+      "name": "Fila del escenario",
       "kind": "custom",
-      "refersTo": "enlace",
-      "description": "Enlace de texto en acento; la flecha avanza 3px en hover.",
-      "html": "<div class=\"ds-oscuro-l\"><a class=\"ds-enlace\" href=\"#\">Conocer la sala <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"/><path d=\"m12 5 7 7-7 7\"/></svg></a></div>",
-      "css": ".ds-oscuro-l { background: #0b0d10; padding: 24px; } .ds-enlace { display: inline-flex; align-items: center; gap: 0.35rem; font: 600 1.0625rem/1.6 'Archivo', 'Segoe UI', system-ui, sans-serif; color: #2fd8ec; text-decoration: none; text-underline-offset: 0.2em; } .ds-enlace:hover { text-decoration: underline; } .ds-enlace svg { width: 1em; height: 1em; transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-enlace:hover svg { transform: translateX(3px); } .ds-enlace:focus-visible { outline: 2px solid #2fd8ec; outline-offset: 3px; border-radius: 4px; }"
+      "refersTo": "equipos",
+      "description": "Paso de la lista de Equipos: la línea superior se llena de cian al activarse y el texto sube a opacidad plena.",
+      "html": "<div class=\"ds-oscuro-f\"><button class=\"ds-fila\" data-activa><span class=\"ds-fila-titulo\">RTX 4060</span><span class=\"ds-fila-texto\">Gráficos altos a más de 100 FPS.</span></button><button class=\"ds-fila\"><span class=\"ds-fila-titulo\">Monitor de 165 Hz</span><span class=\"ds-fila-texto\">Cada movimiento se ve fluido.</span></button></div>",
+      "css": ".ds-oscuro-f { background: #0b0d10; padding: 24px; } .ds-fila { position: relative; display: grid; gap: 0.2rem; width: 100%; padding: 0.8rem 0; border: 0; border-top: 1px solid #262b33; background: none; color: #f4f6f8; font: 400 1.0625rem/1.6 'Archivo', 'Segoe UI', system-ui, sans-serif; text-align: left; cursor: pointer; } .ds-fila::before { content: ''; position: absolute; inset: -1px 0 auto; height: 1px; background: #2fd8ec; transform: scaleX(0); transform-origin: left; transition: transform 600ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-fila[data-activa]::before { transform: scaleX(1); } .ds-fila-titulo, .ds-fila-texto { transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-fila-titulo { font: 700 1.25rem/1.25 'Archivo', 'Segoe UI', system-ui, sans-serif; font-stretch: 106%; letter-spacing: -0.01em; opacity: 0.6; } .ds-fila-texto { font-size: 0.9375rem; line-height: 1.4; color: #a3acb7; opacity: 0.75; } .ds-fila:hover .ds-fila-titulo, .ds-fila[data-activa] .ds-fila-titulo, .ds-fila[data-activa] .ds-fila-texto { opacity: 1; } .ds-fila:focus-visible { outline: 2px solid var(--acento, #2fd8ec); outline-offset: 3px; } @media (prefers-reduced-motion: reduce) { .ds-fila::before, .ds-fila-titulo, .ds-fila-texto { transition: none; } }"
     }
   ],
   "narrative": {
     "northStar": "La vitrina de producto",
-    "overview": "La landing se lee como una página de producto de consola: calma, premium y con la información siempre a un vistazo. Dos superficies se alternan con propósito. Grafito para la experiencia (hero, PCs, consolas, VIP, juegos, cierre) y nube con tarjetas blancas para la información (precios, sedes y horario, comodidades, preguntas). El visitante sabe en qué modo está por el color del suelo que pisa.\n\nUna sola familia variable, Archivo, hace todo el trabajo: ancha y pesada en los títulos, ancho normal en el texto. Un único acento, el cian del logo, marca acciones, estado en vivo y cifras clave; nunca decora. El dorado vive en un solo cuarto: la sala VIP y su precio. La profundidad sale de la alternancia de superficies, radios grandes y líneas de un pixel, no de brillos. El movimiento es de producto: medios que crecen a sangre con el scroll, columnas pegadas y una sola entrada (fundido y 24px de subida) para todo lo demás.\n\nRechazos confirmados por el build: sin glow de neón, sin degradados en tipografía, sin ruido decorativo.",
+    "overview": "La landing se lee como una página de producto de consola: calma, premium y con la información siempre a un vistazo. Dos superficies se alternan con propósito. Grafito para la experiencia (hero, equipos, VIP, comodidades, reserva) y nube con tarjetas blancas para la información (precios, sedes y horario, juegos, preguntas). El visitante sabe en qué modo está por el color del suelo que pisa.\n\nUna sola familia variable, Archivo, hace todo el trabajo: ancha y pesada en los títulos, ancho normal en el texto. Un único acento, el cian del logo, marca acciones, estado en vivo y cifras clave, y firma el trazo de los íconos de dato; nunca pinta titulares ni fondos que no sean botones. El dorado vive en un solo cuarto: la sala VIP y su precio. La profundidad sale de la alternancia de superficies, radios grandes y líneas de un pixel, no de brillos. El movimiento es de producto: un escenario fijo que recorre los equipos, una sala que crece a sangre desde una ventana y una sola entrada (fundido y 24px de subida) para el contenido corriente.\n\nRechazos confirmados por el build: sin glow de neón en la interfaz, sin degradados en tipografía, sin ruido decorativo.",
     "keyCharacteristics": [
       "Alternancia grafito / nube con significado: experiencia sobre oscuro, información sobre claro.",
       "Un acento cian, raro y funcional; dorado encerrado en la VIP.",
       "Archivo variable: títulos a ancho 112% y peso 800, texto a 100% y peso 400.",
       "Radios grandes (28px en tarjetas y medios), botones en píldora, líneas de 1px.",
       "Cifras tabulares en todo el sitio.",
-      "Medios que entran como tarjeta redondeada y se abren con `clip-path`."
+      "Foto y video a sangre bajo un velo que da la lectura; el texto nunca compite con el medio.",
+      "Los cambios de fondo aparecen por capas: se anima la opacidad, nunca el color."
     ],
     "rules": [
       {
         "name": "The Un Acento Rule",
-        "body": "El cian solo marca acciones, estado en vivo y cifras clave. Si un elemento cian no se puede tocar ni informa un estado, no es cian.",
+        "body": "El cian marca acciones, estado en vivo y cifras clave, y firma el trazo de los íconos de dato y el separador de la marquesina. Nunca colorea un titular ni llena un fondo que no sea un botón.",
         "section": "colors"
       },
       {
         "name": "The Cuarto Dorado Rule",
-        "body": "`--vip`, `--vip-hover` y `--vip-noche` existen solo dentro de la sala VIP y en su tarifa. Ningún otro componente los toma prestados.",
+        "body": "`--vip` y `--vip-noche` existen solo dentro de la sala VIP y en su tarifa. Ningún otro componente los toma prestados.",
         "section": "colors"
       },
       {
         "name": "The Contraste en Claro Rule",
-        "body": "Sobre `.claro` el acento se escribe con `acento-texto`, y el botón sólido pasa a tinta con texto blanco. El cian puro no va como texto sobre nube.",
+        "body": "Sobre `.claro` el acento se escribe con `acento-texto`, y el botón sólido pasa a tinta con texto blanco. El cian puro no va como texto sobre nube. La única excepción es el botón de envío del panel de reserva, que conserva el fondo cian con texto `sobre-acento` porque es la conversión de la página.",
         "section": "colors"
       },
       {
@@ -546,12 +593,22 @@
       },
       {
         "name": "The Sin Glow Rule",
-        "body": "No hay resplandores ni sombras de color. La única luz que se mueve es el pulso del punto \"abierto\".",
+        "body": "La interfaz no tiene resplandores ni sombras de color. La única luz que se mueve en ella es el pulso del punto \"abierto\". El bloom de los neones pertenece al logo 3D de la intro, que es un activo de marca y no se copia a ningún componente.",
         "section": "elevation"
       },
       {
         "name": "The Superficie Rule",
-        "body": "Toda sección clara lleva `.claro`. Toda superficie oscura dentro de una sección clara (tarifa VIP, tarjeta de horario, foto del bento) lleva `data-superficie=\"oscura\"`, para que la barra de navegación lea bien sobre qué está.",
+        "body": "Toda sección clara lleva `.claro`. Toda superficie oscura dentro de una sección clara (tarifa VIP, tarjeta de horario) lleva `data-superficie=\"oscura\"`, porque la barra de navegación lee la superficie que tiene justo debajo y toma su tono. Un panel claro sobre oscuro (formulario de reserva) lleva `.claro` también.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Capa que Aparece Rule",
+        "body": "Un cambio de fondo nunca anima `background`: se apila una capa y se anima su `opacity`. Así funcionan el hover del botón y las dos capas de la barra.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Velo Rule",
+        "body": "Texto sobre un medio siempre va sobre un velo que sale del color de la superficie. El medio se ve donde no hay texto.",
         "section": "elevation"
       }
     ],
@@ -561,14 +618,16 @@
       "**Do** usar `acento-texto` para el acento sobre claro y `acento` sobre oscuro.",
       "**Do** escribir títulos en Archivo 800 a ancho 112% con tracking negativo, y texto a ancho 100%.",
       "**Do** animar solo `transform`, `opacity`, `clip-path` y el `font-stretch` del display, con la curva `--ease-ui` (`cubic-bezier(0.16, 1, 0.3, 1)`) o `expo.out` en GSAP.",
-      "**Do** usar una sola entrada para el contenido: `data-reveal`, fundido y 24px de subida, 0.9s, escalonado de 0.08s.",
-      "**Do** desactivar Lenis, pins y scrubs con `prefers-reduced-motion: reduce`; la pista de consolas pasa a carrusel nativo y la marquesina se oculta."
+      "**Do** usar una sola entrada para el contenido corriente: `data-reveal`, fundido y 24px de subida, 0.9s, escalonado de 0.08s. El hero, la carta de tarifas y la VIP tienen la suya.",
+      "**Do** poner un velo bajo todo texto que vaya sobre foto o video.",
+      "**Do** desactivar Lenis, pins y scrubs con `prefers-reduced-motion: reduce`; Equipos pasa a cambiar con un toque, la VIP queda abierta y la marquesina se oculta."
     ],
     "donts": [
       "**Don't** usar el dorado (`--vip`) fuera de la sala VIP y su precio.",
       "**Don't** poner dos secciones seguidas con la misma composición.",
-      "**Don't** usar glow de neón, sombras de color ni degradados sobre tipografía.",
-      "**Don't** usar el cian como decoración: si no es acción, estado en vivo o cifra clave, no es cian.",
+      "**Don't** usar glow de neón ni sombras de color en la interfaz, ni degradados sobre tipografía.",
+      "**Don't** colorear titulares ni fondos de cian: fuera del botón, el cian es texto de acción, estado, cifra o trazo de ícono.",
+      "**Don't** animar `background` o `color` en hover: usa una capa con `opacity`.",
       "**Don't** añadir antetítulos (kickers o eyebrows) sobre los títulos de sección.",
       "**Don't** sumar una segunda familia tipográfica ni íconos de glifo o emoji; los íconos son trazos de línea."
     ]

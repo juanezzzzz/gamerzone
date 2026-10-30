@@ -12,10 +12,12 @@ Un solo momento orquestado por escena. El movimiento cuenta el recorrido físico
 | Ambiente | Marquesina de juegos | GSAP ticker, velocidad × scroll | Continuo |
 
 ## Momentos firmados
-1. **Hero**: la tarjeta de video (con el ancho del contenedor y bordes redondeados) se abre a sangre mientras sube.
-2. **PCs**: la media queda fija y cambia con la spec que cruza el centro de la pantalla.
-3. **Consolas**: recorrido horizontal pinned; cada foto se descubre con clip-path.
-4. **VIP**: la sala crece desde una ventana central y el contenido sube.
+1. **Intro**: el logo 3D se arma en unos 3 s encima de la página y se desvanece mientras entra el hero.
+2. **Hero**: el fondo se queda atrás con el scroll y el contenido se va.
+3. **Precios**: la carta sube y se abre desde el centro.
+4. **Equipos**: la sección se fija y el scroll recorre los pasos; cada uno cambia la imagen y llena su línea de cian.
+5. **VIP**: la sala crece desde una ventana central y luego aparece la información.
+6. **Comodidades**: la foto se mueve más despacio que la página.
 
 ## Easing
 - Reveal: `expo.out`

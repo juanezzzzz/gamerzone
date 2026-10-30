@@ -15,11 +15,9 @@
       z-index: 40;
       display: block;
       padding: var(--s-2) var(--gutter) calc(var(--s-2) + env(safe-area-inset-bottom, 0px));
-      background: rgb(11 13 16 / 0.8);
-      backdrop-filter: saturate(180%) blur(20px);
-      -webkit-backdrop-filter: saturate(180%) blur(20px);
-      box-shadow: 0 -1px 0 rgb(255 255 255 / 0.06);
-      transition: transform 400ms var(--ease-ui), opacity 400ms;
+      /* Opaca: translúcida se vuelve gris sobre las secciones claras */
+      background: var(--grafito);
+      transition: transform 400ms var(--ease-ui), opacity 400ms var(--ease-ui);
     }
     .mobile-cta .btn { width: 100%; min-height: 3.25rem; }
     /* Se esconde en el hero, la VIP y el CTA final, donde ya hay botón */

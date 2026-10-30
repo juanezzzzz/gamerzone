@@ -31,9 +31,16 @@ const {
       href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap"
     />
     <script is:inline>
-      document.documentElement.classList.add(
-        matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduced' : 'motion'
-      )
+      ;(() => {
+        const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches
+        document.documentElement.classList.add(reducido ? 'reduced' : 'motion')
+        // La intro del logo sale una vez por visita, y no si se entra directo a una sección
+        let vista = false
+        try {
+          vista = sessionStorage.getItem('gz-intro') === '1'
+        } catch {}
+        if (!reducido && !vista && !location.hash) document.documentElement.classList.add('con-intro')
+      })()
     </script>
   </head>
   <body class:list={{ revision: REVISION }}>

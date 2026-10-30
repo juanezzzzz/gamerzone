@@ -1,13 +1,14 @@
 ---
-import { NEGOCIO, SEDES, PLANES, TEXTOS, PORTADA_MEDIA } from '../data/local'
+import { NEGOCIO, SEDES, PLANES, TEXTOS, HORARIO } from '../data/local'
+import { url } from '../lib/url'
 import Icono from './Icono.astro'
 // Qué se quiere reservar: tipos de puesto y planes, en el orden de la página
 const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p.nombre)]
 ---
 
 <section class="cta" id="reserva" data-cta>
-  <div class="tarjeta" data-cta-tarjeta>
-    <video src={PORTADA_MEDIA.video} poster={PORTADA_MEDIA.poster} muted loop playsinline preload="none"></video>
+  <div class="tarjeta">
+    <video src={url('/media/teclado.mp4')} poster={url('/media/teclado-poster.webp')} muted loop playsinline preload="none"></video>
     <div class="sombra"></div>
 
     <div class="contenido">
@@ -21,7 +22,7 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
       </div>
 
       <!-- Panel de reserva: arma el mensaje y abre WhatsApp con todo escrito -->
-      <form class="panel claro" data-reserva data-wa={NEGOCIO.whatsapp.numero} novalidate data-reveal>
+      <form class="panel claro" data-reserva data-wa={NEGOCIO.whatsapp.numero} data-horario={JSON.stringify(HORARIO.dias)} novalidate data-reveal>
         <h3 class="panel-titulo">Reserva tu sesión</h3>
 
         <div class="campo">
@@ -59,8 +60,8 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
           </div>
           <div class="campo">
             <label for="r-hora">Hora</label>
-            <input id="r-hora" name="hora" type="time" step="1800" value="18:00" required />
-            <p class="error" data-error="hora">Elige la hora.</p>
+            <select id="r-hora" name="hora" required data-horas></select>
+            <p class="error" data-error="hora">Ese día no abrimos. Elige otro.</p>
           </div>
           <div class="campo">
             <label for="r-personas">Personas</label>
@@ -94,6 +95,22 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
       dia.min = hoy
       dia.value = hoy
     }
+
+    // Las horas salen del horario del día elegido, en formato 24 h
+    const dias: { dia: number; abre: number; cierra: number }[] = JSON.parse(form.dataset.horario || '[]')
+    const horas = form.querySelector<HTMLSelectElement>('[data-horas]')
+    const llenarHoras = () => {
+      if (!horas || !dia) return
+      const elegida = horas.value || '18:00'
+      const d = dias.find((x) => x.dia === new Date(`${dia.value}T12:00:00`).getDay())
+      const lista = d ? Array.from({ length: d.cierra - d.abre }, (_, i) => `${String((d.abre + i) % 24).padStart(2, '0')}:00`) : []
+      // Después de medianoche sigue siendo la noche del día elegido: se dice para no confundir
+      horas.replaceChildren(...lista.map((h, i) => new Option(d && d.abre + i >= 24 ? `${h} madrugada` : h, h)))
+      horas.disabled = !lista.length
+      if (lista.includes(elegida)) horas.value = elegida
+    }
+    llenarHoras()
+    dia?.addEventListener('change', llenarHoras)
 
     const campo = (n: string) => form.elements.namedItem(n) as HTMLInputElement
     const marcar = (n: string, ok: boolean) => {
@@ -132,7 +149,7 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
         `Hola, soy ${String(d.get('nombre')).trim()} y quiero reservar en GamerZone.`,
         `• Sede: ${d.get('sede')}`,
         `• Para: ${d.get('que')}`,
-        `• Día: ${fecha(String(d.get('dia')))}, a las ${d.get('hora')}`,
+        `• Día: ${fecha(String(d.get('dia')))}, a las ${d.get('hora')}${form.querySelector<HTMLSelectElement>('[data-horas]')?.selectedOptions[0]?.text.includes('madrugada') ? ' de la madrugada siguiente' : ''}`,
         `• Personas: ${d.get('personas')}`,
       ]
       const nota = String(d.get('nota') || '').trim()
@@ -143,13 +160,9 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
 </script>
 
 <style>
-  .cta { padding: var(--s-seccion) var(--gutter) var(--s-5); }
   .tarjeta {
     position: relative;
-    width: min(100%, var(--ancho-max));
-    margin-inline: auto;
     overflow: hidden;
-    border-radius: var(--radio-l);
     background: var(--grafito-2);
   }
   video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -161,7 +174,9 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
     grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
     align-items: center;
     gap: var(--s-5);
-    padding: clamp(2rem, 5vw, 4.5rem);
+    width: min(100% - 2 * var(--gutter), var(--ancho-max));
+    margin-inline: auto;
+    padding-block: var(--s-seccion);
   }
   .texto { display: grid; gap: var(--s-3); }
   .texto .lead { color: var(--sobre-oscuro); }
@@ -192,7 +207,6 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
     color: var(--tinta);
     font: 400 var(--t-m) / 1.3 var(--f-sans);
     caret-color: var(--acento-texto);
-    transition: border-color var(--dur-micro), background-color var(--dur-micro);
   }
   textarea { resize: vertical; }
   input::placeholder, textarea::placeholder { color: var(--tinta-2); }
@@ -222,14 +236,12 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
     border-radius: calc(var(--radio-s) - 0.25rem);
     font: 600 var(--t-s) / 1 var(--f-sans);
     color: var(--tinta-2);
-    transition: background-color var(--dur-micro), color var(--dur-micro);
   }
   .segmento input:checked + span { background: var(--blanco); color: var(--tinta); box-shadow: var(--sombra-tarjeta); }
   .segmento input:focus-visible + span { outline: 2px solid var(--acento-texto); outline-offset: 1px; }
 
   .enviar { width: 100%; margin-top: var(--s-1); min-height: 3.25rem; }
   .claro .enviar:not(.btn-ghost) { background: var(--acento); color: var(--sobre-acento); }
-  .claro .enviar:not(.btn-ghost):hover { background: var(--acento-hover); }
   .enviar :global(.icono) { width: 1.2rem; height: 1.2rem; }
   .aviso { font-size: var(--t-xs); color: var(--tinta-2); text-align: center; }
 
@@ -237,9 +249,7 @@ const opciones = ['PC gamer', 'Consola Xbox', 'Sala VIP', ...PLANES.map((p) => p
     .contenido { grid-template-columns: 1fr; }
   }
   @media (max-width: 47.99rem) {
-    .cta { padding-inline: 0; padding-bottom: 0; }
-    .tarjeta { border-radius: 0; }
-    .contenido { padding: var(--s-5) var(--gutter); }
+    .contenido { padding-block: var(--s-6); }
     .panel { padding: var(--s-3); }
   }
 </style>

@@ -8,7 +8,7 @@ import Icono from './Icono.astro'
   <div class="escena" data-vip-escena>
     <div class="ventana" data-vip-ventana>
       <Picture src={VIP.imagen} alt="Sala VIP con sofá y pantalla grande" formats={['avif', 'webp']} fallbackFormat="webp" widths={[800, 1400, 2000]} sizes="100vw" />
-      <div class="sombra"></div>
+      <div class="sombra" data-vip-sombra></div>
     </div>
     <div class="contenido" data-vip-contenido>
       <h2 class="titulo-xl">{VIP.titulo}</h2>
@@ -48,7 +48,7 @@ import Icono from './Icono.astro'
   .sombra {
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse 70% 70% at 50% 55%, rgb(15 12 8 / 0.82), rgb(15 12 8 / 0.45));
+    background: radial-gradient(ellipse 75% 75% at 50% 50%, rgb(15 12 8 / 0.86), rgb(15 12 8 / 0.5));
   }
 
   .contenido {
@@ -79,12 +79,32 @@ import Icono from './Icono.astro'
   }
   .unidad { color: var(--sobre-oscuro-2); }
   .contenido .btn { margin-top: var(--s-2); background: var(--vip); color: var(--vip-noche); }
-  .contenido .btn:hover { background: var(--vip-hover); }
-  .nota { margin-top: 0.25rem; font-size: var(--t-s); color: var(--sobre-oscuro-2); }
+    .nota { margin-top: 0.25rem; font-size: var(--t-s); color: var(--sobre-oscuro-2); }
 
+  /* Escritorio: la información a la izquierda; la pantalla de la sala queda a la vista */
+  @media (min-width: 64.0625rem) {
+    .escena { justify-items: start; }
+    .contenido {
+      justify-items: start;
+      max-width: calc(max(var(--gutter), (100vw - var(--ancho-max)) / 2) + 36rem);
+      padding-left: max(var(--gutter), (100vw - var(--ancho-max)) / 2);
+      text-align: left;
+    }
+    .features { justify-content: flex-start; }
+    .sombra { background: linear-gradient(90deg, rgb(15 12 8 / 0.92) 25%, rgb(15 12 8 / 0.55) 50%, rgb(15 12 8 / 0.1) 75%); }
+  }
+  /* En vertical: la pantalla arriba, a la vista; la información abajo sobre su sombra */
+  @media (max-width: 64rem) {
+    .escena { align-items: end; height: auto; min-height: 100svh; }
+    .ventana { inset: 0 0 auto; height: 52svh; }
+    .ventana :global(img) { object-position: 62% 50%; }
+    .sombra { background: linear-gradient(to top, var(--vip-noche), rgb(15 12 8 / 0) 45%); }
+    .contenido { padding-block: 44svh var(--s-5); }
+  }
   @media (max-width: 47.99rem) {
     .ventana { clip-path: inset(8% 5% 8% 5% round var(--radio-l)); }
-    .features { display: grid; justify-items: center; }
+    /* Lista alineada a la izquierda dentro de un bloque centrado: los íconos quedan en columna */
+    .features { display: grid; justify-items: start; width: fit-content; }
   }
   :global(.reduced) .ventana { clip-path: none; }
   :global(.reduced) .ventana :global(img) { transform: none; }

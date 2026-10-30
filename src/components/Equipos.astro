@@ -1,0 +1,273 @@
+---
+import { Picture } from 'astro:assets'
+import { SPECS_PC, MEDIA_PC, CONSOLAS, PRECIO_HORA_PC, PRECIO_HORA_CONSOLA, TEXTOS } from '../data/local'
+// Un solo escenario para PCs y consolas: la lista a la izquierda, la imagen a la derecha.
+// Los pasos corren con el scroll en escritorio y con un toque en tablet y móvil.
+const capasPc = Object.values(MEDIA_PC)
+---
+
+<section class="equipos" id="equipos" data-equipos aria-labelledby="equipos-titulo">
+  <h2 class="visually-hidden" id="equipos-titulo">Equipos</h2>
+  <div class="pin" data-equipos-pin>
+    <div class="contenedor rejilla">
+      <div class="fija">
+        <div class="medios" aria-hidden="true">
+          {
+            capasPc.map((m, i) => (
+              <div class="capa" data-capa={i} data-activa={i === 0 ? '' : undefined}>
+                {m.tipo === 'img' ? (
+                  <Picture src={m.src} alt="" formats={['avif', 'webp']} fallbackFormat="webp" widths={[640, 1000, 1400]} sizes="(max-width: 64rem) 100vw, 55vw" />
+                ) : (
+                  <video src={m.src} poster={m.poster} muted loop playsinline preload="none" />
+                )}
+              </div>
+            ))
+          }
+          {
+            CONSOLAS.map((c, i) => (
+              <div class="capa" data-capa={capasPc.length + i}>
+                <Picture src={c.img} alt="" formats={['avif', 'webp']} fallbackFormat="webp" widths={[640, 1000, 1400]} sizes="(max-width: 64rem) 100vw, 55vw" />
+              </div>
+            ))
+          }
+        </div>
+        <div class="pestanas" role="group" aria-label="Elegir equipo">
+          <button type="button" class="pestana" data-pestana="pc" aria-pressed="true">PC gamer</button>
+          <button type="button" class="pestana" data-pestana="xbox" aria-pressed="false">Consola Xbox</button>
+        </div>
+
+      </div>
+        <div class="grupos">
+          <div class="grupo" data-grupo="pc" data-activo>
+            <h3 class="titulo">{TEXTOS.pcs.titulo}</h3>
+            <p class="entrada">
+              {TEXTOS.pcs.texto} Desde <span class:list={{ pendiente: PRECIO_HORA_PC.pendiente }}>{PRECIO_HORA_PC.texto}</span> la hora.
+            </p>
+            <ol class="filas">
+              {
+                SPECS_PC.map((s, i) => (
+                  <li>
+                    <button type="button" class="fila" data-paso={i} data-activa={i === 0 ? '' : undefined}>
+                      <span class:list={['fila-titulo', { pendiente: s.pendiente }]}>{s.valor}</span>
+                      <span class="fila-texto">{s.nota}</span>
+                    </button>
+                  </li>
+                ))
+              }
+            </ol>
+          </div>
+
+          <div class="grupo" data-grupo="xbox">
+            <h3 class="titulo">{TEXTOS.consolas.titulo}</h3>
+            <p class="entrada">
+              {TEXTOS.consolas.texto} Desde <span class:list={{ pendiente: PRECIO_HORA_CONSOLA.pendiente }}>{PRECIO_HORA_CONSOLA.texto}</span> la hora.
+            </p>
+            <ol class="filas">
+              {
+                CONSOLAS.map((c, i) => (
+                  <li>
+                    <button type="button" class="fila" data-paso={SPECS_PC.length + i}>
+                      <span class="fila-titulo">
+                        {c.nombre}
+                        <span class="fila-anio">{c.anio}</span>
+                      </span>
+                      <span class="fila-texto">{c.texto}</span>
+                    </button>
+                  </li>
+                ))
+              }
+            </ol>
+          </div>
+        </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Estado del escenario. En escritorio lo mueve el scroll (motion.ts avisa con gz:paso);
+  // en tablet, móvil y reduced motion lo mueve el toque.
+  const seccion = document.querySelector<HTMLElement>('[data-equipos]')
+  if (seccion) {
+    const filas = [...seccion.querySelectorAll<HTMLElement>('[data-paso]')]
+    const capas = [...seccion.querySelectorAll<HTMLElement>('[data-capa]')]
+    const grupos = [...seccion.querySelectorAll<HTMLElement>('[data-grupo]')]
+    const pestanas = [...seccion.querySelectorAll<HTMLButtonElement>('[data-pestana]')]
+    const reducido = document.documentElement.classList.contains('reduced')
+    const primerXbox = Number(seccion.querySelector<HTMLElement>('[data-grupo="xbox"] [data-paso]')?.dataset.paso)
+    let visible = false
+    let actual = 0
+
+    const reproducir = () =>
+      capas.forEach((c, i) => {
+        const v = c.querySelector('video')
+        if (v && i === actual && visible && !reducido) v.play().catch(() => {})
+        else if (v) v.pause()
+      })
+
+    const activar = (paso: number) => {
+      actual = paso
+      const grupo = paso >= primerXbox ? 'xbox' : 'pc'
+      filas.forEach((f) => f.toggleAttribute('data-activa', Number(f.dataset.paso) === paso))
+      capas.forEach((c) => c.toggleAttribute('data-activa', Number(c.dataset.capa) === paso))
+      grupos.forEach((g) => g.toggleAttribute('data-activo', g.dataset.grupo === grupo))
+      pestanas.forEach((p) => p.setAttribute('aria-pressed', String(p.dataset.pestana === grupo)))
+      reproducir()
+    }
+    const ir = (paso: number) => {
+      // Con pin activo, el clic lleva el scroll al paso; sin pin, cambia de una
+      if (seccion.dataset.pin !== undefined) seccion.dispatchEvent(new CustomEvent('gz:ir-paso', { detail: paso }))
+      else activar(paso)
+    }
+
+    filas.forEach((f) => f.addEventListener('click', () => ir(Number(f.dataset.paso))))
+    pestanas.forEach((p) => p.addEventListener('click', () => ir(p.dataset.pestana === 'xbox' ? primerXbox : 0)))
+    seccion.addEventListener('gz:paso', (e) => activar((e as CustomEvent<number>).detail))
+
+    new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting
+      reproducir()
+    }).observe(seccion)
+  }
+</script>
+
+<style>
+  .pin { min-height: 100svh; display: flex; align-items: center; padding-block: calc(var(--nav-h) + var(--s-2)) var(--s-3); }
+  .rejilla {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    /* Dos filas vacías centran la lista frente a la imagen */
+    grid-template-areas: '. medios' 'pestanas medios' 'grupos medios' '. medios';
+    grid-template-rows: minmax(0, 1fr) auto auto minmax(0, 1fr);
+    gap: var(--s-3) var(--s-5);
+  }
+  /* En escritorio sus hijos van directo a la rejilla */
+  .fija { display: contents; }
+  .pestanas { grid-area: pestanas; }
+  .grupos { grid-area: grupos; }
+  .medios { grid-area: medios; }
+
+  .pestanas {
+    display: inline-flex;
+    justify-self: start;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    border-radius: var(--radio-boton);
+    background: var(--grafito-2);
+  }
+  .pestana {
+    min-height: 2.5rem;
+    padding: 0 1.25rem;
+    border: 0;
+    border-radius: var(--radio-boton);
+    background: transparent;
+    color: var(--sobre-oscuro-2);
+    font: 600 var(--t-s) / 1 var(--f-sans);
+    cursor: pointer;
+  }
+  .pestana:hover { color: var(--sobre-oscuro); }
+  .pestana[aria-pressed='true'] { background: var(--sobre-oscuro); color: var(--grafito); }
+
+  /* Los dos grupos ocupan la misma celda: cambiar de pestaña no mueve la página */
+  .grupos { display: grid; }
+  .grupo {
+    grid-area: 1 / 1;
+    display: grid;
+    align-content: start;
+    gap: var(--s-2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 400ms var(--ease-ui), transform 500ms var(--ease-ui), visibility 400ms;
+  }
+  .grupo[data-activo] { opacity: 1; visibility: visible; transform: none; }
+  .grupo .titulo { font-size: var(--t-escena); }
+  .entrada { color: var(--sobre-oscuro-2); text-wrap: pretty; }
+
+  .filas { margin-top: var(--s-1); }
+  .fila {
+    position: relative;
+    display: grid;
+    gap: 0.2rem;
+    width: 100%;
+    padding: 0.8rem 0;
+    border: 0;
+    border-top: 1px solid var(--linea-oscura);
+    background: none;
+    color: var(--sobre-oscuro);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  /* La línea del paso activo se llena de cian */
+  .fila::before {
+    content: '';
+    position: absolute;
+    inset: -1px 0 auto;
+    height: 1px;
+    background: var(--acento);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 600ms var(--ease-ui);
+  }
+  .fila[data-activa]::before { transform: scaleX(1); }
+  .fila-titulo, .fila-texto { transition: opacity 300ms var(--ease-ui); }
+  .fila-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--s-2);
+    font: 700 var(--t-l) / 1.25 var(--f-sans);
+    font-stretch: 106%;
+    letter-spacing: -0.01em;
+    opacity: 0.6;
+  }
+  .fila-anio { font: 600 var(--t-s) / 1 var(--f-sans); color: var(--sobre-oscuro-2); }
+  .fila-texto { font-size: var(--t-s); line-height: 1.4; color: var(--sobre-oscuro-2); opacity: 0.75; }
+  .fila:hover .fila-titulo, .fila[data-activa] .fila-titulo, .fila[data-activa] .fila-texto { opacity: 1; }
+
+  .medios {
+    position: relative;
+    height: min(calc(100svh - var(--nav-h) - var(--s-5)), 46rem);
+    overflow: hidden;
+    border-radius: var(--radio-l);
+    background: var(--grafito-2);
+  }
+  /* Un mismo borde oscuro para todas las imágenes: se leen como un solo escenario */
+  .medios::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 58%, rgb(20 23 28 / 0.7));
+  }
+  .capa {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.05);
+    transition: opacity 700ms var(--ease-ui), transform 1200ms var(--ease-ui);
+  }
+  .capa[data-activa] { opacity: 1; transform: none; }
+  .capa :global(img), .capa video { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Tablet y móvil: la imagen queda fija arriba y se elige con un toque */
+  @media (max-width: 64rem) {
+    .pin { display: block; min-height: 0; padding-block: var(--s-seccion); }
+    .rejilla { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; grid-template-rows: none; gap: var(--s-2); }
+    .medios, .pestanas, .grupos { grid-area: auto; }
+    .fija {
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 1;
+      display: grid;
+      gap: var(--s-1);
+      padding-block: var(--s-1) var(--s-2);
+      background: var(--grafito);
+    }
+    .medios { height: min(56vw, 38svh); }
+    .fila { padding-block: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .grupo, .capa, .fila::before, .fila-titulo, .fila-texto { transition: none; }
+  }
+</style>

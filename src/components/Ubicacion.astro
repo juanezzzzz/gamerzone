@@ -64,8 +64,12 @@ const nombres = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'
       <p class="contacto">
         <Icono nombre="mensaje" />
         WhatsApp <span class:list={{ pendiente: NEGOCIO.whatsapp.pendiente }}>{NEGOCIO.whatsapp.visible}</span>
-        <span aria-hidden="true">·</span>
-        <a class:list={{ pendiente: NEGOCIO.instagram.pendiente }} href={`https://instagram.com/${NEGOCIO.instagram.texto.replace('@', '')}`} target="_blank" rel="noopener">{NEGOCIO.instagram.texto}</a>
+        {NEGOCIO.instagram.texto && (
+          <>
+            <span aria-hidden="true">·</span>
+            <a href={`https://instagram.com/${NEGOCIO.instagram.texto.replace('@', '')}`} target="_blank" rel="noopener">{NEGOCIO.instagram.texto}</a>
+          </>
+        )}
       </p>
     </div>
   </div>

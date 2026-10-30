@@ -1,25 +1,62 @@
 ---
-import { NEGOCIO, SEDES } from '../data/local'
+import { NEGOCIO } from '../data/local'
 import { url } from '../lib/url'
 ---
 
-<!-- Apertura: una pantalla. El logo 3D se arma solo (autoplay) y los subtítulos dicen qué es el lugar -->
-<section class="apertura" id="inicio" aria-label={`${NEGOCIO.nombre} ${NEGOCIO.lema}`} data-apertura>
-  <gamerzone-logo autoplay src={url('/logo/gamerzone-logo.glb')} poster={url('/logo/gamerzone-poster.webp')}>
-    <p data-from="0" data-to="0.34" data-kicker={`${NEGOCIO.nombre} · ${NEGOCIO.lema}`}>Sala de videojuegos</p>
-    <p data-from="0.38" data-to="0.7" data-kicker="PCs gamer · Xbox · Sala VIP">Juega en grande</p>
-    <p data-from="0.74" data-to="1.01" data-kicker={`${SEDES.length} sedes · ${NEGOCIO.ciudad.texto}`}>Bienvenido a {NEGOCIO.nombre}</p>
+<!-- Intro: el logo 3D se arma una sola vez por visita, encima del hero. No ocupa scroll y cualquier
+     gesto la salta. Sin JS, con reduced motion o de vuelta en la misma visita no aparece. -->
+<div class="intro" data-intro aria-hidden="true">
+  <gamerzone-logo autoplay no-sound src={url('/logo/gamerzone-logo.glb')} poster={url('/logo/gamerzone-poster.webp')}>
+    <p data-from="0.5" data-to="1.01">Bienvenido a {NEGOCIO.nombre}</p>
   </gamerzone-logo>
-</section>
+</div>
 
 <script>
-  import '../scripts/gz-logo.js'
+  const intro = document.querySelector<HTMLElement>('[data-intro]')
+  const root = document.documentElement
+  const avisar = () => {
+    root.classList.remove('con-intro')
+    root.dataset.introFin = ''
+    document.dispatchEvent(new Event('gz:intro-fin'))
+  }
+
+  if (intro && root.classList.contains('con-intro')) {
+    import('../scripts/gz-logo.js')
+    let cerrada = false
+    const cerrar = () => {
+      if (cerrada) return
+      cerrada = true
+      gestos.forEach((g) => window.removeEventListener(g, cerrar))
+      intro.classList.add('saliendo')
+      // El hero entra mientras la intro se desvanece
+      avisar()
+      setTimeout(() => intro.remove(), 700)
+    }
+    const gestos = ['wheel', 'touchstart', 'keydown', 'pointerdown']
+    gestos.forEach((g) => window.addEventListener(g, cerrar, { passive: true }))
+    setTimeout(cerrar, 3400)
+    try {
+      sessionStorage.setItem('gz-intro', '1')
+    } catch {}
+  } else {
+    intro?.remove()
+    avisar()
+  }
 </script>
 
 <style>
-  /* El alto se reserva aquí y no en el componente: así la página no salta cuando el
-     custom element se registra, y los ScrollTrigger miden bien desde el principio.
-     Una sola pantalla: el armado corre con el tiempo, no con el scroll. */
+  .intro { display: none; }
+  :global(.con-intro) .intro,
+  .intro:global(.saliendo) {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: block;
+    background: var(--grafito);
+    transition: opacity 600ms var(--ease-ui);
+  }
+  .intro:global(.saliendo) { opacity: 0; pointer-events: none; }
+  /* El alto se reserva aquí: el componente mide su propio scroll con esta variable */
   gamerzone-logo {
     --gz-scroll: 100svh;
     /* El componente lee estos nombres: se mapean a los tokens del sitio */
@@ -34,5 +71,4 @@ import { url } from '../lib/url'
   }
   /* Los subtítulos son datos para el componente; no se muestran antes de que cargue */
   gamerzone-logo > p { display: none; }
-
 </style>

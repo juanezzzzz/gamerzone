@@ -7,6 +7,7 @@
   --grafito: #0b0d10;
   --grafito-2: #14171c;
   --grafito-3: #1d2128;
+  --grafito-4: #3a414c;
   --sobre-oscuro: #f4f6f8;
   --sobre-oscuro-2: #a3acb7;
   --linea-oscura: #262b33;
@@ -17,11 +18,9 @@
   --tinta: #0b0d10;
   --tinta-2: #535c68;
   --linea-clara: #e1e4e9;
-  --tinta-hover: #262b33;
 
   /* Acento: cian del logo. --acento-texto es la versión que cumple contraste sobre claro */
   --acento: #2fd8ec;
-  --acento-hover: #6ae6f4;
   --acento-texto: #00788a;
   --sobre-acento: #04161a;
   --abierto: #2fd8ec;
@@ -32,7 +31,6 @@
 
   /* Dorado: solo dentro de la sala VIP y en su precio */
   --vip: #e2bd73;
-  --vip-hover: #ecd09a;
   --vip-noche: #0f0c08;
 
   /* Tipografía: una sola familia variable. El ancho expandido es la voz de los títulos */
@@ -47,7 +45,9 @@
   --t-xl: 1.5rem;
   --t-2xl: clamp(1.75rem, 2.4vw, 2.25rem);
   --t-3xl: clamp(2.25rem, 4.4vw, 3.75rem);
+  --t-escena: clamp(2rem, 3.2vw, 3rem);
   --t-4xl: clamp(2.75rem, 6.4vw, 5.5rem);
+  --t-display: clamp(3rem, 7.4vw, 6rem);
   --t-precio: clamp(2.5rem, 4vw, 3.5rem);
 
   /* Espacio */

@@ -13,7 +13,7 @@ const desktop = '(min-width: 64.0625rem)'
 
 /* ---------- Videos: solo se reproducen en pantalla ---------- */
 
-// Los videos de las specs de PC los maneja su sección: solo suenan cuando su capa está activa
+// Los videos de Equipos los maneja su sección: solo corre el de la capa activa
 const io = new IntersectionObserver(
   (entries) =>
     entries.forEach((e) => {
@@ -25,49 +25,12 @@ const io = new IntersectionObserver(
 )
 $$<HTMLVideoElement>('video').filter((v) => !v.closest('[data-capa]')).forEach((v) => io.observe(v))
 
-/* ---------- Eje de consolas: ubica los hitos y mueve el marcador ---------- */
-
-const eje = $('[data-eje]')
-const hitos = $$('[data-hito]')
-const paneles = $$('[data-panel]')
-const marcador = $('[data-marcador]')
-hitos.forEach((h) => (h.style.left = `${h.dataset.x}%`))
-
-// `centro` es la coordenada horizontal (dentro de la pista) que está en el centro de la pantalla.
-function ejeConsolas(centro: number) {
-  if (!eje || !marcador || !paneles.length) return
-  const centros = paneles.map((p) => p.offsetLeft + p.offsetWidth / 2)
-  const xs = hitos.map((h) => Number(h.dataset.x))
-  let x = xs[0]
-  let activo = 0
-  if (centro >= centros[centros.length - 1]) {
-    x = xs[xs.length - 1]
-    activo = xs.length - 1
-  } else if (centro > centros[0]) {
-    const i = centros.findIndex((c) => c > centro) - 1
-    const f = (centro - centros[i]) / (centros[i + 1] - centros[i])
-    x = xs[i] + (xs[i + 1] - xs[i]) * f
-    activo = f < 0.5 ? i : i + 1
-  }
-  marcador.style.left = `${x}%`
-  hitos.forEach((h, i) => h.toggleAttribute('data-activo', i === activo))
-}
-ejeConsolas(0)
-
-// Sin pin (tablet, mobile o reduced motion) el eje sigue al carrusel nativo
-const pistaConsolas = $('[data-consolas-pista]')
-pistaConsolas?.addEventListener(
-  'scroll',
-  () => ejeConsolas(pistaConsolas.scrollLeft + pistaConsolas.clientWidth / 2),
-  { passive: true }
-)
-
 /* ---------- Triggers de lectura (nav, CTA móvil) ---------- */
 
 function triggersDeLectura() {
   const nav = $('[data-nav]')
   ScrollTrigger.create({
-    start: () => window.innerHeight * 0.8,
+    start: () => window.innerHeight * 0.5,
     // Más allá del final: con 'max' la barra se apagaba justo al tocar el fondo de la página
     end: () => document.documentElement.scrollHeight * 2,
     onToggle: (self) => nav?.classList.toggle('solida', self.isActive),
@@ -87,10 +50,22 @@ function triggersDeLectura() {
   ScrollTrigger.addEventListener('refresh', superficie)
   superficie()
 
+  // La barra marca la sección en la que está el visitante
+  $$<HTMLAnchorElement>('[data-nav] .links a').forEach((a) => {
+    const destino = $(a.getAttribute('href')!)
+    if (!destino) return
+    ScrollTrigger.create({
+      trigger: destino,
+      start: 'top 50%',
+      end: 'bottom 50%',
+      onToggle: (self) => (self.isActive ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')),
+    })
+  })
+
   // CTA móvil: se esconde donde ya hay botón
   const mobileCta = $('[data-mobile-cta]')
   if (mobileCta) {
-    const zonas = ['[data-apertura]', '[data-hero]', '[data-vip]', '[data-cta]']
+    const zonas = ['[data-hero]', '[data-vip]', '[data-cta]']
     const visibles = new Set<string>()
     zonas.forEach((z) =>
       ScrollTrigger.create({
@@ -142,72 +117,76 @@ if (!reduced) {
 
   const mm = gsap.matchMedia()
 
-  // Hero: entrada al aparecer (la apertura va antes)
+  // Hero: entra cuando termina la intro; el video arranca un poco más cerca y se asienta
+  const entradaHero = gsap
+    .timeline({ paused: true, defaults: { ease: 'expo.out' } })
+    .from('[data-hero-fondo] video', { scale: 1.08, duration: 2.4 }, 0)
+    .from('[data-hero-pieza]', { opacity: 0, y: 28, duration: 1.1, stagger: 0.09 }, 0.1)
+  if (root.dataset.introFin !== undefined) entradaHero.play()
+  else document.addEventListener('gz:intro-fin', () => entradaHero.play(), { once: true })
+
+  // Hero: al bajar, el fondo se queda atrás y el contenido se va
   gsap
-    .timeline({ defaults: { ease: 'expo.out' }, scrollTrigger: { trigger: '[data-hero]', start: 'top 75%', once: true } })
-    .from('[data-hero-titulo]', { opacity: 0, y: 32, duration: 1.2 })
-    .from('[data-hero-pieza]', { opacity: 0, y: 20, duration: 1, stagger: 0.08 }, 0.15)
-    .from('[data-hero-media] video', { opacity: 0, scale: 1.08, duration: 1.6 }, 0.25)
+    .timeline({ scrollTrigger: { trigger: '[data-hero]', start: 'top top', end: 'bottom top', scrub: 0.4 } })
+    .to('[data-hero-fondo]', { yPercent: 18, ease: 'none' }, 0)
+    .to('[data-hero-contenido]', { opacity: 0, y: -40, ease: 'none', duration: 0.5 }, 0)
 
-  // Hero: la tarjeta de video se abre a pantalla completa mientras sube
-  gsap.to('[data-hero-media]', {
-    clipPath: 'inset(0px 0px round 0px)',
-    ease: 'none',
-    scrollTrigger: { trigger: '[data-hero-media]', start: 'top 85%', end: 'top top', scrub: 0.6 },
-  })
-
-  // Precios: las tarifas entran en cascada con algo más de recorrido
-  gsap.from('.tarifa', {
-    y: 48,
+  // Precios: la carta sube y se abre desde el centro
+  gsap.from('[data-carta]', {
+    y: 56,
     opacity: 0,
-    duration: 1,
+    clipPath: 'inset(0% 6% 0% 6% round 28px)',
+    duration: 1.2,
     ease: 'expo.out',
-    stagger: 0.1,
-    scrollTrigger: { trigger: '.tarifas', start: 'top 85%', once: true },
+    scrollTrigger: { trigger: '[data-carta]', start: 'top 88%', once: true },
   })
 
-  // Consolas: recorrido horizontal en desktop; cada foto se descubre al entrar
+  // Equipos: en escritorio la sección se fija y el scroll recorre los pasos
   mm.add(desktop, () => {
-    const pista = $('[data-consolas-pista]')!
-    const dist = () => pista.scrollWidth - window.innerWidth
-    const mover = gsap.to(pista, {
-      x: () => -dist(),
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '[data-consolas]',
-        start: 'top top',
-        end: () => `+=${dist()}`,
-        pin: '[data-consolas-pin]',
-        scrub: 0.6,
-        invalidateOnRefresh: true,
-        onUpdate: () => ejeConsolas(-Number(gsap.getProperty(pista, 'x')) + window.innerWidth / 2),
+    const seccion = $('[data-equipos]')!
+    const pasos = $$('[data-paso]', seccion).length
+    let actual = 0
+    seccion.dataset.pin = ''
+    const pin = ScrollTrigger.create({
+      trigger: seccion,
+      start: 'top top',
+      end: () => `+=${window.innerHeight * 0.42 * pasos}`,
+      pin: '[data-equipos-pin]',
+      onUpdate: (self) => {
+        const paso = Math.min(pasos - 1, Math.floor(self.progress * pasos))
+        if (paso === actual) return
+        actual = paso
+        seccion.dispatchEvent(new CustomEvent('gz:paso', { detail: paso }))
       },
     })
-    $$('[data-panel]', pista).forEach((panel) => {
-      const entra = { trigger: panel, containerAnimation: mover, start: 'left 95%', end: 'left 45%', scrub: true }
-      gsap.fromTo($('[data-panel-foto]', panel), { clipPath: 'inset(0% 0% 0% 100% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 28px)', ease: 'none', scrollTrigger: entra })
-      gsap.fromTo($('[data-panel-foto] img', panel), { scale: 1.2 }, { scale: 1, ease: 'none', scrollTrigger: entra })
-      gsap.fromTo($('[data-panel-info]', panel), { opacity: 0, x: 40 }, { opacity: 1, x: 0, ease: 'none', scrollTrigger: entra })
-    })
+    const ir = (e: Event) => {
+      const paso = (e as CustomEvent<number>).detail
+      lenis.scrollTo(pin.start + ((paso + 0.5) / pasos) * (pin.end - pin.start), { duration: 0.9 })
+    }
+    seccion.addEventListener('gz:ir-paso', ir)
+    return () => {
+      delete seccion.dataset.pin
+      seccion.removeEventListener('gz:ir-paso', ir)
+    }
   })
 
-  // VIP: la sala crece desde una ventana central y el contenido sube
-  gsap
-    .timeline({
-      scrollTrigger: {
-        trigger: '[data-vip]',
-        start: 'top top',
-        end: '+=70%',
-        pin: '[data-vip-escena]',
-        scrub: 0.6,
-        invalidateOnRefresh: true,
-      },
-    })
+  // VIP: la sala crece desde una ventana central y el contenido sube.
+  // Se fija solo en escritorio: en vertical el contenido puede ser más alto que la pantalla
+  const salaVip = (scrollTrigger: ScrollTrigger.Vars) => gsap
+    .timeline({ scrollTrigger })
     .to('[data-vip-ventana]', { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', duration: 1 }, 0)
     .to('[data-vip-ventana] img', { scale: 1, ease: 'none', duration: 1 }, 0)
+    // Primero se ve la sala; luego baja la sombra y aparece la información
+    .from('[data-vip-sombra]', { opacity: 0, ease: 'none', duration: 0.5 }, 0.1)
     // El botón y la nota solo aparecen: si también subieran, la cascada los cruzaría
-    .from('[data-vip-contenido] > :not(.btn):not(.nota)', { opacity: 0, y: 30, stagger: 0.06, duration: 0.5, ease: 'power2.out' }, 0.15)
-    .from('[data-vip-contenido] > :is(.btn, .nota)', { opacity: 0, duration: 0.4, ease: 'power2.out' }, 0.45)
+    .from('[data-vip-contenido] > :not(.btn):not(.nota)', { opacity: 0, y: 30, stagger: 0.04, duration: 0.4, ease: 'power2.out' }, 0.4)
+    .from('[data-vip-contenido] > :is(.btn, .nota)', { opacity: 0, duration: 0.3, ease: 'power2.out' }, 0.65)
+  mm.add(desktop, () => {
+    salaVip({ trigger: '[data-vip]', start: 'top top', end: '+=70%', pin: '[data-vip-escena]', scrub: 0.6, invalidateOnRefresh: true })
+  })
+  mm.add('(max-width: 64rem)', () => {
+    salaVip({ trigger: '[data-vip]', start: 'top 75%', end: 'top 5%', scrub: 0.6 })
+  })
 
   // Juegos: marquesina continua; el scroll la acelera y cambia su dirección
   const filas = $$('[data-fila]')
@@ -235,12 +214,12 @@ if (!reduced) {
     })
   }
 
-  // CTA final: la tarjeta crece un poco al entrar
-  gsap.from('[data-cta-tarjeta]', {
-    scale: 0.92,
-    ease: 'none',
-    scrollTrigger: { trigger: '[data-cta]', start: 'top bottom', end: 'center center', scrub: 0.6 },
-  })
+  // Comodidades: la foto se mueve más despacio que la página
+  gsap.fromTo(
+    '[data-comodidades-foto]',
+    { yPercent: -6 },
+    { yPercent: 6, ease: 'none', scrollTrigger: { trigger: '[data-comodidades]', start: 'top bottom', end: 'bottom top', scrub: true } }
+  )
 
   triggersDeLectura()
   refrescar()

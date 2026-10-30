@@ -6,8 +6,7 @@ import emblema from '../assets/brand/gamerzone-logo.png'
 const links = [
   ['#precios', 'Precios'],
   ['#sedes', 'Sedes'],
-  ['#pcs', 'PCs'],
-  ['#consolas', 'Consolas'],
+  ['#equipos', 'Equipos'],
   ['#vip', 'Sala VIP'],
   ['#juegos', 'Juegos'],
 ]
@@ -73,25 +72,31 @@ const links = [
     inset: 0 0 auto;
     z-index: 50;
     height: var(--nav-h);
-    transition: background-color 400ms var(--ease-ui), box-shadow 400ms var(--ease-ui), color 400ms var(--ease-ui);
   }
-  /* Pasada la apertura, la barra se vuelve translúcida para que el contenido no compita con ella */
-  .nav:global(.solida) {
-    background: rgb(11 13 16 / 0.72);
+  /* Dos capas de fondo: la oscura y la clara. Pasar de una a otra solo anima opacidad */
+  .nav::before, .nav::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
-    box-shadow: 0 1px 0 rgb(255 255 255 / 0.06);
+    transition: opacity 400ms var(--ease-ui);
   }
+  .nav::before { background: rgb(11 13 16 / 0.92); box-shadow: 0 1px 0 rgb(255 255 255 / 0.06); }
+  .nav::after { background: rgb(244 245 247 / 0.94); box-shadow: 0 1px 0 var(--linea-clara); }
+  /* Pasada la apertura, la barra se vuelve translúcida para que el contenido no compita con ella */
+  .nav:global(.solida)::before { opacity: 1; }
   /* Sobre las secciones claras la barra también es clara */
-  .nav:global(.solida.sobre-claro) {
-    background: rgb(244 245 247 / 0.78);
-    box-shadow: 0 1px 0 var(--linea-clara);
-    color: var(--tinta);
-  }
+  .nav:global(.solida.sobre-claro)::before { opacity: 0; }
+  .nav:global(.solida.sobre-claro)::after { opacity: 1; }
+  .nav:global(.sobre-claro) { color: var(--tinta); }
   .nav:global(.sobre-claro) .links a { color: var(--tinta-2); }
-  .nav:global(.sobre-claro) .links a:hover { color: var(--tinta); }
+  .nav:global(.sobre-claro) .links a:hover, .nav:global(.sobre-claro) .links a[aria-current] { color: var(--tinta); }
   .nav:global(.sobre-claro) .menu-btn { color: var(--tinta); }
-  :global(.menu-abierto) .nav { background: transparent; box-shadow: none; backdrop-filter: none; color: var(--sobre-oscuro); }
+  :global(.menu-abierto) .nav { color: var(--sobre-oscuro); }
+  :global(.menu-abierto) .nav::before, :global(.menu-abierto) .nav::after { opacity: 0; }
   :global(.menu-abierto) .nav .menu-btn { color: var(--sobre-oscuro); }
 
   .barra {
@@ -118,9 +123,8 @@ const links = [
     font-size: var(--t-s);
     text-decoration: none;
     color: var(--sobre-oscuro-2);
-    transition: color var(--dur-micro);
   }
-  .links a:hover { color: var(--sobre-oscuro); }
+  .links a:hover, .links a[aria-current] { color: var(--sobre-oscuro); }
   .fin { display: flex; justify-content: flex-end; align-items: center; gap: var(--s-2); }
   .reservar { min-height: 2.25rem; padding: 0 1.1rem; font-size: var(--t-s); }
 
@@ -174,7 +178,7 @@ const links = [
     text-decoration: none;
     opacity: 0;
     transform: translateY(12px);
-    transition: opacity 500ms var(--ease-ui), transform 500ms var(--ease-ui), color var(--dur-micro);
+    transition: opacity 500ms var(--ease-ui), transform 500ms var(--ease-ui);
   }
   .menu-links a:hover, .menu-links a:focus-visible { color: var(--acento); }
   :global(.menu-abierto) .menu-links a { opacity: 1; transform: none; }

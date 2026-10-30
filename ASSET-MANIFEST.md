@@ -5,16 +5,16 @@ Todo el material actual es **stock complementario** de Pixabay (licencia Pixabay
 | Archivo | Fuente | Grading | Uso | Estado |
 |---|---|---|---|---|
 | `public/media/piso1-sala.mp4` | Pixabay 181093 | vivo | Hero | Stock. Reemplazar por recorrido real del piso 1 |
-| `public/media/teclado.mp4` | Pixabay 31806 | vivo | PCs (spec periféricos), CTA final | Stock |
-| `public/media/ventilador.mp4` | Pixabay 8064 | vivo | PCs (spec refrigeración) | Stock |
-| `src/assets/media/gpu.webp` | Pixabay 5268574 | vivo | PCs (spec gráfica) | Stock |
-| `src/assets/media/monitor.webp` | Pixabay 3923644 | vivo | PCs (spec monitor) | Stock, silueta sin rostro. Reemplazar por un puesto real |
-| `src/assets/media/xbox-360.webp` | Pixabay 4061103 | vivo | Consolas | Stock. **Es un control rojo moderno, no de 360**: reemplazar |
-| `src/assets/media/xbox-one.webp` | Pixabay 1136046 | vivo | Consolas, galería | Stock |
-| `src/assets/media/xbox-series-s.webp` | Pixabay 10225432 | vivo | Consolas | Stock |
+| `public/media/teclado.mp4` | Pixabay 31806 | vivo | Equipos (spec periféricos), CTA final | Stock |
+| `public/media/ventilador.mp4` | Pixabay 8064 | vivo | Equipos (spec refrigeración) | Stock |
+| `src/assets/media/gpu.webp` | Pixabay 5268574 | vivo | Equipos (spec gráfica) | Stock |
+| `src/assets/media/monitor.webp` | Pixabay 3923644 | vivo | Equipos (spec monitor) | Stock, silueta sin rostro. Reemplazar por un puesto real |
+| `src/assets/media/xbox-360.webp` | Pixabay 2202570 | vivo, recortada sobre grafito | Equipos | Stock de una 360 real. Reemplazar por la del local |
+| `src/assets/media/xbox-one.webp` | Pixabay 893225 | vivo | Equipos | Stock |
+| `src/assets/media/xbox-series-s.webp` | Pixabay 10225432 | vivo, exposición baja | Equipos | Stock |
 | `src/assets/media/escalera.webp` | Pixabay 7334038 | vivo | El lugar, galería | Stock |
 | `src/assets/media/jugadores.webp` | Pixabay 4566163 | vivo | Galería | Stock |
-| `src/assets/media/vip.webp` | Pixabay 2270554 | vip, pantalla desenfocada | Sala VIP | Stock. Reemplazar por la VIP real |
+| `src/assets/media/vip.webp` | Pixabay 2270554 | vip, logo de GamerZone en la pantalla | Sala VIP | Stock. Reemplazar por la VIP real |
 
 ## Marca (fuente: `Desktop/blender/gamerzone-logo`)
 | Archivo | Uso |

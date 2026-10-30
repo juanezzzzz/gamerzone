@@ -9,13 +9,13 @@ const iconos = ['monitor', 'control', 'grupo'] as const
 
 <section class="precios claro" id="precios">
   <div class="contenedor">
-    <header class="cabeza" data-reveal>
+    <header class="cabeza-doble cabeza" data-reveal>
       <h2 class="titulo">{TEXTOS.precios.titulo}</h2>
       <p class="lead">{TEXTOS.precios.texto}</p>
     </header>
 
-    <!-- Tarifas: el precio principal de cada grupo en grande, el resto debajo -->
-    <ul class="tarifas">
+    <!-- Una sola carta con tres columnas: se comparan de un vistazo -->
+    <ul class="carta" data-carta>
       {
         TARIFAS.map((g, i) => {
           const [principal, ...resto] = g.filas
@@ -51,18 +51,22 @@ const iconos = ['monitor', 'control', 'grupo'] as const
     </ul>
     <p class="nota dato">{TEXTOS.precios.nota}</p>
 
-    <!-- Planes: filas comparables, con el ahorro a la vista -->
+    <!-- Planes: tres columnas sobre una línea, sin más tarjetas -->
     <div class="planes">
       <h3 class="subtitulo" data-reveal>{TEXTOS.precios.planes}</h3>
       <ol class="lista-planes">
         {
           PLANES.map((p) => (
             <li class="plan" data-reveal>
-              <div class="plan-info">
+              <div class="plan-cabeza">
                 <h4 class="plan-nombre">{p.nombre}</h4>
-                <p class="plan-texto">{p.texto}</p>
+                <p class:list={['plan-precio', { pendiente: p.pendiente }]}>{p.precio}</p>
               </div>
+              {ahorro(p) > 0 && <p class="ahorro">Ahorras {pesos(ahorro(p))} frente a la tarifa por hora</p>}
+              <p class="plan-texto">{p.texto}</p>
               <ul class="incluye">
+                <li><Icono nombre="reloj" /><span class:list={{ pendiente: p.pendiente }}>{p.duracion}</span></li>
+                <li><Icono nombre="grupo" /><span class:list={{ pendiente: p.pendiente }}>{p.personas === '1' ? '1 persona' : /^\d+$/.test(p.personas) ? `${p.personas} personas` : p.personas}</span></li>
                 {p.incluye.map((x) => (
                   <li>
                     <Icono nombre="check" />
@@ -70,23 +74,9 @@ const iconos = ['monitor', 'control', 'grupo'] as const
                   </li>
                 ))}
               </ul>
-              <dl class="plan-datos">
-                <div>
-                  <dt>Duración</dt>
-                  <dd class:list={{ pendiente: p.pendiente }}>{p.duracion}</dd>
-                </div>
-                <div>
-                  <dt>Personas</dt>
-                  <dd class:list={{ pendiente: p.pendiente }}>{p.personas}</dd>
-                </div>
-              </dl>
-              <div class="plan-cierre">
-                <p class:list={['plan-precio', { pendiente: p.pendiente }]}>{p.precio}</p>
-                {ahorro(p) > 0 && <p class="ahorro">Ahorras {pesos(ahorro(p))}</p>}
-                <a class="btn btn-ghost" href={waLink(`Hola, me interesa el plan "${p.nombre}".`)} target="_blank" rel="noopener">
-                  Reservar este plan
-                </a>
-              </div>
+              <a class="enlace plan-enlace" href={waLink(`Hola, me interesa el plan "${p.nombre}".`)} target="_blank" rel="noopener">
+                Reservar este plan <Icono nombre="flecha" />
+              </a>
             </li>
           ))
         }
@@ -97,27 +87,29 @@ const iconos = ['monitor', 'control', 'grupo'] as const
 
 <style>
   .precios { padding-block: var(--s-seccion); }
-  .cabeza { display: grid; gap: var(--s-2); margin-bottom: var(--s-5); }
+  .cabeza { margin-bottom: var(--s-5); }
 
-  .tarifas {
+  .carta {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--s-2);
+    overflow: hidden;
+    border-radius: var(--radio-l);
+    background: var(--blanco);
+    box-shadow: var(--sombra-tarjeta);
   }
   .tarifa {
     display: flex;
     flex-direction: column;
     gap: var(--s-3);
     padding: var(--s-4);
-    border-radius: var(--radio-l);
-    background: var(--blanco);
-    box-shadow: var(--sombra-tarjeta);
   }
+  .tarifa + .tarifa:not(.vip) { border-left: 1px solid var(--linea-clara); }
   .nombre {
     display: flex;
     align-items: center;
     gap: 0.6rem;
     font: 700 var(--t-l) / 1.2 var(--f-sans);
+    white-space: nowrap;
   }
   .principal { display: grid; gap: 0.15rem; }
   .monto {
@@ -126,16 +118,16 @@ const iconos = ['monitor', 'control', 'grupo'] as const
     letter-spacing: -0.03em;
   }
   .unidad { font-weight: 500; color: var(--tinta-2); }
-  .resto { display: grid; border-top: 1px solid var(--linea-clara); }
+  .resto { display: grid; }
   .resto div {
     display: flex;
     justify-content: space-between;
     gap: var(--s-2);
     padding-block: 0.75rem;
-    border-bottom: 1px solid var(--linea-clara);
+    border-top: 1px solid var(--linea-clara);
   }
   .resto dt { color: var(--tinta-2); }
-  .resto dd { font-weight: 700; }
+  .resto dd { font-weight: 700; white-space: nowrap; }
 
   /* La sala VIP es la única tarifa oscura y la única con dorado */
   .tarifa.vip { background: var(--vip-noche); color: var(--sobre-oscuro); }
@@ -147,40 +139,45 @@ const iconos = ['monitor', 'control', 'grupo'] as const
   .nota { margin-top: var(--s-3); }
 
   .planes { margin-top: var(--s-6); }
-  .lista-planes { margin-top: var(--s-3); border-top: 1px solid var(--linea-clara); }
-  .plan {
+  .lista-planes {
     display: grid;
-    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--s-4);
-    align-items: center;
-    padding-block: var(--s-4);
-    border-bottom: 1px solid var(--linea-clara);
+    margin-top: var(--s-3);
   }
-  .plan-nombre { font: 800 var(--t-xl) / 1.15 var(--f-sans); font-stretch: 106%; letter-spacing: -0.01em; }
-  .plan-texto { margin-top: 0.35rem; color: var(--tinta-2); max-width: 40ch; }
-  .incluye { display: grid; gap: 0.4rem; font-size: var(--t-s); }
+  .plan {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+    padding-top: var(--s-3);
+    border-top: 2px solid var(--tinta);
+  }
+  .plan-cabeza { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-2); }
+  .plan-nombre { font: 800 var(--t-l) / 1.2 var(--f-sans); font-stretch: 106%; letter-spacing: -0.01em; }
+  .plan-precio { font: 800 var(--t-xl) / 1 var(--f-sans); font-stretch: var(--ancho-titulo); letter-spacing: -0.02em; white-space: nowrap; }
+  .ahorro { font: 700 var(--t-xs) / 1.3 var(--f-sans); color: var(--acento-texto); }
+  .plan-texto { color: var(--tinta-2); }
+  .incluye { display: grid; gap: 0.4rem; margin-block: var(--s-1) var(--s-2); font-size: var(--t-s); }
   .incluye li { display: flex; align-items: center; gap: 0.5rem; }
   .incluye :global(.icono) { width: 1.1rem; height: 1.1rem; color: var(--acento-texto); }
-  .plan-datos { display: grid; gap: 0.4rem; font-size: var(--t-s); }
-  .plan-datos div { display: flex; gap: 0.5rem; }
-  .plan-datos dt { color: var(--tinta-2); }
-  .plan-datos dd { font-weight: 700; }
-  .plan-cierre { display: grid; justify-items: end; gap: 0.5rem; text-align: right; }
-  .plan-precio { font: 800 var(--t-2xl) / 1 var(--f-sans); font-stretch: var(--ancho-titulo); letter-spacing: -0.02em; }
-  .ahorro { font: 700 var(--t-xs) / 1 var(--f-sans); color: var(--acento-texto); }
-  .plan-cierre .btn { margin-top: 0.25rem; min-height: 2.5rem; font-size: var(--t-s); }
+  .plan-enlace { margin-top: auto; }
 
   @media (max-width: 64rem) {
-    .plan { grid-template-columns: minmax(0, 1fr) auto; }
-    .incluye, .plan-datos { grid-column: 1; }
-    .plan-cierre { grid-column: 2; grid-row: 1 / span 3; align-self: start; }
+    /* Tablet: PC y consola lado a lado; la VIP a todo el ancho */
+    .carta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tarifa.vip { grid-column: 1 / -1; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+    .tarifa.vip .nombre { flex-basis: 100%; }
+    .tarifa.vip .enlace { margin-top: 0; }
+    .lista-planes { gap: var(--s-3); }
+    .plan-cabeza { flex-direction: column; gap: 0.25rem; }
   }
   @media (max-width: 47.99rem) {
-    .tarifas { grid-template-columns: 1fr; }
+    .carta { grid-template-columns: 1fr; }
     .tarifa { padding: var(--s-3); }
-    .plan { grid-template-columns: 1fr; gap: var(--s-2); }
-    .plan-cierre { grid-column: 1; grid-row: auto; justify-items: start; text-align: left; grid-template-columns: auto auto; align-items: baseline; gap: 0.25rem var(--s-2); }
-    .plan-cierre .btn { grid-column: 1 / -1; width: 100%; }
-    .plan-datos { display: flex; gap: var(--s-3); }
+    .tarifa + .tarifa:not(.vip) { border-left: 0; border-top: 1px solid var(--linea-clara); }
+    .tarifa.vip { flex-direction: column; flex-wrap: nowrap; align-items: stretch; justify-content: flex-start; }
+    .tarifa.vip .nombre { flex-basis: auto; }
+    .lista-planes { grid-template-columns: 1fr; gap: var(--s-4); }
+    .plan-cabeza { flex-direction: row; gap: var(--s-2); }
   }
 </style>

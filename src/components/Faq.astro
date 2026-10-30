@@ -26,14 +26,12 @@ import Icono from './Icono.astro'
 </section>
 
 <style>
-  .faq { padding-block: 0 var(--s-seccion); }
+  .faq { padding-block: var(--s-seccion); }
   .rejilla {
     display: grid;
     grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
     gap: var(--s-4) var(--s-6);
     align-items: start;
-    padding-top: var(--s-6);
-    border-top: 1px solid var(--linea-clara);
   }
   .pegado { position: sticky; top: calc(var(--nav-h) + var(--s-4)); display: grid; gap: var(--s-2); }
   .pegado a { color: var(--acento-texto); font-weight: 600; }
